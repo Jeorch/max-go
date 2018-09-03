@@ -1,17 +1,17 @@
 package main
 
 import (
-	"github.com/Jeorch/max-go/bmmodel/company"
-	"github.com/Jeorch/max-go/bmmodel/profile"
-	"github.com/Jeorch/max-go/bmpipe/phauthbricks/others"
-	"github.com/Jeorch/max-go/bmpipe/phcompanybricks/push"
-	"github.com/Jeorch/max-go/bmpipe/phprofilebricks/push"
+	"github.com/Jeorch/max-go/phmodel/company"
+	"github.com/Jeorch/max-go/phmodel/profile"
+	"github.com/Jeorch/max-go/phpipe/phauthbricks/others"
+	"github.com/Jeorch/max-go/phpipe/phcompanybricks/push"
+	"github.com/Jeorch/max-go/phpipe/phprofilebricks/push"
 	"net/http"
 
-	"github.com/Jeorch/max-go/bmmodel/auth"
-	"github.com/Jeorch/max-go/bmpipe/phauthbricks/find"
-	"github.com/Jeorch/max-go/bmpipe/phauthbricks/push"
-	"github.com/Jeorch/max-go/bmpipe/phauthbricks/update"
+	"github.com/Jeorch/max-go/phmodel/auth"
+	"github.com/Jeorch/max-go/phpipe/phauthbricks/find"
+	"github.com/Jeorch/max-go/phpipe/phauthbricks/push"
+	"github.com/Jeorch/max-go/phpipe/phauthbricks/update"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"

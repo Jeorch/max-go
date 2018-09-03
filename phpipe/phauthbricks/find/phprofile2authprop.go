@@ -1,21 +1,20 @@
-package profilepush
+package authfind
 
 import (
 	"fmt"
-	"github.com/Jeorch/max-go/bmmodel/auth"
-	"github.com/Jeorch/max-go/bmmodel/profile"
+	"github.com/Jeorch/max-go/phmodel/profile"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
-	"github.com/alfredyang1986/blackmirror/bmerror"
+	"github.com/Jeorch/max-go/phmodel/auth"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"
+	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmpipe"
 	"github.com/alfredyang1986/blackmirror/bmrouter"
 	"github.com/alfredyang1986/blackmirror/jsonapi"
-	"gopkg.in/mgo.v2/bson"
 	"net/http"
 	"io"
 )
 
-type PHAuthProfileRSPush struct {
+type PHProfile2AuthProp struct {
 	bk *bmpipe.BMBrick
 }
 
@@ -23,44 +22,32 @@ type PHAuthProfileRSPush struct {
  * brick interface
  *------------------------------------------------*/
 
-func (b *PHAuthProfileRSPush) Exec() error {
-	var tmp auth.PHAuth = b.bk.Pr.(auth.PHAuth)
-	profile_tmp := tmp.Profile
-
+func (b *PHProfile2AuthProp) Exec() error {
+	var tmp profile.PHProfile = b.bk.Pr.(profile.PHProfile)
 	eq := request.EQCond{}
 	eq.Ky = "profile_id"
-	eq.Vy = profile_tmp.Id
+	eq.Vy = tmp.Id
 	req := request.Request{}
-	req.Res = "PHProfileProp"
+	req.Res = "PHAuthProp"
 	var condi []interface{}
 	condi = append(condi, eq)
 	c := req.SetConnect("conditions", condi)
 	fmt.Println(c)
 
-	var qr profile.PHProfileProp
-	err := qr.FindOne(c.(request.Request))
-	if err != nil && err.Error() == "not found" {
-		//panic(err)
-		qr.Id_ = bson.NewObjectId()
-		qr.Id = qr.Id_.Hex()
-		qr.ProfileID = profile_tmp.Id
-		qr.CompanyID = profile_tmp.Company.Id
-		qr.InsertBMObject()
-	}
-	fmt.Println(qr)
-
-	b.bk.Pr = tmp
-	return nil
+	var reval auth.PHAuthProp
+	err := reval.FindOne(c.(request.Request))
+	b.bk.Pr = reval
+	return err
 }
 
-func (b *PHAuthProfileRSPush) Prepare(pr interface{}) error {
-	req := pr.(auth.PHAuth)
-	//b.bk.Pr = req
+func (b *PHProfile2AuthProp) Prepare(pr interface{}) error {
+	req := pr.(profile.PHProfile)
 	b.BrickInstance().Pr = req
+	//b.bk.Pr = req
 	return nil
 }
 
-func (b *PHAuthProfileRSPush) Done(pkg string, idx int64, e error) error {
+func (b *PHProfile2AuthProp) Done(pkg string, idx int64, e error) error {
 	tmp, _ := bmpkg.GetPkgLen(pkg)
 	if int(idx) < tmp-1 {
 		bmrouter.NextBrickRemote(pkg, idx+1, b)
@@ -68,21 +55,21 @@ func (b *PHAuthProfileRSPush) Done(pkg string, idx int64, e error) error {
 	return nil
 }
 
-func (b *PHAuthProfileRSPush) BrickInstance() *bmpipe.BMBrick {
+func (b *PHProfile2AuthProp) BrickInstance() *bmpipe.BMBrick {
 	if b.bk == nil {
 		b.bk = &bmpipe.BMBrick{}
 	}
 	return b.bk
 }
 
-func (b *PHAuthProfileRSPush) ResultTo(w io.Writer) error {
+func (b *PHProfile2AuthProp) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(auth.PHAuth)
+	tmp := pr.(auth.PHAuthProp)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
 
-func (b *PHAuthProfileRSPush) Return(w http.ResponseWriter) {
+func (b *PHProfile2AuthProp) Return(w http.ResponseWriter) {
 	ec := b.BrickInstance().Err
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
@@ -91,4 +78,3 @@ func (b *PHAuthProfileRSPush) Return(w http.ResponseWriter) {
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }
-

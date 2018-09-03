@@ -6,7 +6,7 @@ import (
 	"github.com/alfredyang1986/blackmirror/bmpipe"
 	"github.com/alfredyang1986/blackmirror/bmrouter"
 	"github.com/alfredyang1986/blackmirror/jsonapi"
-	"github.com/Jeorch/max-go/bmmodel/auth"
+	"github.com/Jeorch/max-go/phmodel/auth"
 	"io"
 	"net/http"
 )

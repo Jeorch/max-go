@@ -2,9 +2,9 @@ package authfind
 
 import (
 	"fmt"
-	"github.com/Jeorch/max-go/bmmodel/auth"
-	"github.com/Jeorch/max-go/bmmodel/company"
-	"github.com/Jeorch/max-go/bmmodel/profile"
+	"github.com/Jeorch/max-go/phmodel/auth"
+	"github.com/Jeorch/max-go/phmodel/company"
+	"github.com/Jeorch/max-go/phmodel/profile"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"
