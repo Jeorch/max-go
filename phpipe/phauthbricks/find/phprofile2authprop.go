@@ -31,7 +31,7 @@ func (b *PHProfile2AuthProp) Exec() error {
 	req.Res = "PHAuthProp"
 	var condi []interface{}
 	condi = append(condi, eq)
-	c := req.SetConnect("conditions", condi)
+	c := req.SetConnect("eqcond", condi)
 	fmt.Println(c)
 
 	var reval auth.PHAuthProp

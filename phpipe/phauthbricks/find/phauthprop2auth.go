@@ -86,7 +86,7 @@ func findAuth(prop auth.PHAuthProp) (auth.PHAuth, error) {
 	req.Res = "PHAuth"
 	var condi []interface{}
 	condi = append(condi, eq)
-	c := req.SetConnect("conditions", condi)
+	c := req.SetConnect("eqcond", condi)
 	fmt.Println(c)
 
 	reval := auth.PHAuth{}
@@ -104,7 +104,7 @@ func findProfile(prop auth.PHAuthProp) (profile.PHProfile, error) {
 	req.Res = "PHProfile"
 	var condi []interface{}
 	condi = append(condi, eq)
-	c := req.SetConnect("conditions", condi)
+	c := req.SetConnect("eqcond", condi)
 	fmt.Println(c)
 
 	reval := profile.PHProfile{}
@@ -122,7 +122,7 @@ func findProfileProp(phProfile profile.PHProfile) (profile.PHProfileProp, error)
 	req.Res = "PHProfileProp"
 	var condi []interface{}
 	condi = append(condi, eq)
-	c := req.SetConnect("conditions", condi)
+	c := req.SetConnect("eqcond", condi)
 	fmt.Println(c)
 
 	reval := profile.PHProfileProp{}
@@ -139,7 +139,7 @@ func findProfileCompany(prop profile.PHProfileProp) (company.PHCompany, error) {
 	req.Res = "PHCompany"
 	var condi []interface{}
 	condi = append(condi, eq)
-	c := req.SetConnect("conditions", condi)
+	c := req.SetConnect("eqcond", condi)
 	fmt.Println(c)
 
 	reval := company.PHCompany{}

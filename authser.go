@@ -26,9 +26,9 @@ func main() {
 	 * model object
 	 *------------------------------------------------*/
 	fac.RegisterModel("request", &request.Request{})
-	fac.RegisterModel("eq_cond", &request.EQCond{})
-	fac.RegisterModel("up_cond", &request.UPCond{})
-	fac.RegisterModel("fm_cond", &request.FMUCond{})
+	fac.RegisterModel("eqcond", &request.EQCond{})
+	fac.RegisterModel("upcond", &request.UPCond{})
+	fac.RegisterModel("fmcond", &request.FMUCond{})
 	fac.RegisterModel("BMErrorNode", &bmerror.BMErrorNode{})
 
 	fac.RegisterModel("PHAuth", &auth.PHAuth{})

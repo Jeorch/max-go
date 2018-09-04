@@ -34,7 +34,7 @@ func (b *PHAuthProfileRSPush) Exec() error {
 	req.Res = "PHProfileProp"
 	var condi []interface{}
 	condi = append(condi, eq)
-	c := req.SetConnect("conditions", condi)
+	c := req.SetConnect("eqcond", condi)
 	fmt.Println(c)
 
 	var qr profile.PHProfileProp
