@@ -5,6 +5,7 @@ import (
 	"github.com/Jeorch/max-go/phmodel/maxjob"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmerror"
+	"github.com/alfredyang1986/blackmirror/bmexcelhandle"
 	"github.com/alfredyang1986/blackmirror/bmpipe"
 	"github.com/alfredyang1986/blackmirror/bmrouter"
 	"github.com/alfredyang1986/blackmirror/jsonapi"
@@ -26,20 +27,28 @@ type PHMaxJobPushBrick struct {
 func (b *PHMaxJobPushBrick) Exec() error {
 	var tmp maxjob.PHMaxJob = b.bk.Pr.(maxjob.PHMaxJob)
 	var err error
-	var cpaDes string
-	var gycDes string
+	var cpaCsv string
+	var gycCsv string
+	var cpaDesName string
+	var gycDesName string
+	var notArrivalHospCsv string
+	var notArrivalHospDesName string
 	cpa := tmp.Args["cpa"].(string)
 	gyc := tmp.Args["gyc"].(string)
 	if cpa != "" {
-		cpaDes, err = push2hdfs(cpa)
-		tmp.Args["cpa"] = cpaDes
+		cpaCsv, notArrivalHospCsv, err = cpa2csv(cpa)
+		cpaDesName, err = push2hdfs(cpaCsv)
+		notArrivalHospDesName, err = push2hdfs(notArrivalHospCsv)
+		tmp.Args["cpa"] = cpaDesName
+		tmp.Args["not_arrival_hosp_file"] = notArrivalHospDesName
 	}
 	if err!=nil {
 		return err
 	}
 	if gyc != "" {
-		gycDes, err = push2hdfs(gyc)
-		tmp.Args["gyc"] = gycDes
+		gycCsv, err = gyc2csv(gyc)
+		gycDesName, err = push2hdfs(gycCsv)
+		tmp.Args["gyc"] = gycDesName
 	}
 	b.BrickInstance().Pr = tmp
  	return err
@@ -83,8 +92,29 @@ func (b *PHMaxJobPushBrick) Return(w http.ResponseWriter) {
 	}
 }
 
+func cpa2csv(cpaFile string) (string, string, error) {
+	var err error
+	var cpa string
+	var notArrivalHosp string
+	localCpa := "resource/" + cpaFile
+	cpa, err = bmexcelhandle.GenerateCSVFromXLSXFile(localCpa, 0)
+	notArrivalHosp, err = bmexcelhandle.GenerateCSVFromXLSXFile(localCpa, 1)
+	os.Remove(localCpa)
+	return cpa, notArrivalHosp, err
+}
+
+func gyc2csv(gycFile string) (string, error) {
+	var err error
+	var gyc string
+	localGyc := "resource/" + gycFile
+	gyc, err = bmexcelhandle.GenerateCSVFromXLSXFile(localGyc, 0)
+	os.Remove(localGyc)
+	return gyc, err
+}
+
 func push2hdfs(localFile string) (string, error) {
-	localDir := "resource/" + localFile
+	//localDir := "resource/" + localFile
+	localDir := localFile
 	fileDesName, _ := uuid.GenerateUUID()
 	fileDesPath := "/workData/Client/"+ fileDesName
 	fmt.Println(fileDesName)

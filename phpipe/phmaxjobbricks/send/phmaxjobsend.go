@@ -23,7 +23,7 @@ type PHMaxJobSendBrick struct {
 func (b *PHMaxJobSendBrick) Exec() error {
 	var maxjob maxjob.PHMaxJob = b.bk.Pr.(maxjob.PHMaxJob)
 	msg, err := jsonapi.ToJsonString(&maxjob)
-	err = bmxmpp.Forward("admin@localhost", msg)
+	err = bmxmpp.Forward("cui@localhost", msg)
 	return err
 }
 
