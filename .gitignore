@@ -1,5 +1,4 @@
 *.a
 .idea
 dump.*
-
 max-go

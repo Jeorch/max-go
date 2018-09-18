@@ -79,7 +79,7 @@ func (bd *PHCompany) UpdateBMObject(req request.Request) error {
  *------------------------------------------------*/
 
 func (bd PHCompany) IsCompanyRegisted() bool {
-	session, err := mgo.Dial("max-mongo:27017")
+	session, err := mgo.Dial("localhost:27017")
 	if err != nil {
 		panic("dial db error")
 	}

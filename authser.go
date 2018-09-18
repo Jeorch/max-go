@@ -2,9 +2,15 @@ package main
 
 import (
 	"github.com/Jeorch/max-go/phmodel/company"
+	"github.com/Jeorch/max-go/phmodel/maxjob"
 	"github.com/Jeorch/max-go/phmodel/profile"
 	"github.com/Jeorch/max-go/phpipe/phauthbricks/others"
 	"github.com/Jeorch/max-go/phpipe/phcompanybricks/push"
+	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/delete"
+	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/forword"
+	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/generate"
+	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/push"
+	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/send"
 	"github.com/Jeorch/max-go/phpipe/phprofilebricks/push"
 	"net/http"
 
@@ -36,6 +42,8 @@ func main() {
 	fac.RegisterModel("PHCompany", &company.PHCompany{})
 	fac.RegisterModel("PHProfile", &profile.PHProfile{})
 	fac.RegisterModel("PHProfileProp", &profile.PHProfileProp{})
+
+	fac.RegisterModel("phmaxjob", &maxjob.PHMaxJob{})
 
 	/*------------------------------------------------
 	 * auth find bricks object
@@ -69,10 +77,19 @@ func main() {
 	fac.RegisterModel("PHAuthProfileRSPush", &profilepush.PHAuthProfileRSPush{})
 
 	/*------------------------------------------------
+	 * maxjob bricks object
+	 *------------------------------------------------*/
+	fac.RegisterModel("PHMaxJobForwardBrick", &maxjobforword.PHMaxJobForwardBrick{})
+	fac.RegisterModel("PHMaxJobGenerateBrick", &maxjobgenerate.PHMaxJobGenerateBrick{})
+	fac.RegisterModel("PHMaxJobDeleteBrick", &maxjobdelete.PHMaxJobDeleteBrick{})
+	fac.RegisterModel("PHMaxJobPushBrick", &maxjobpush.PHMaxJobPushBrick{})
+	fac.RegisterModel("PHMaxJobSendBrick", &maxjobsend.PHMaxJobSendBrick{})
+
+	/*------------------------------------------------
 	 * other bricks object
 	 *------------------------------------------------*/
 	fac.RegisterModel("PHAuthGenerateToken", &authothers.PHAuthGenerateToken{})
 
 	r := bmrouter.BindRouter()
-	http.ListenAndServe(":8080", r)
+	http.ListenAndServe(":8081", r)
 }

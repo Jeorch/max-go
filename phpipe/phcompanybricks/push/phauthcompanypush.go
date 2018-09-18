@@ -36,7 +36,6 @@ func (b *PHAuthCompanyPush) Exec() error {
 
 func (b *PHAuthCompanyPush) Prepare(pr interface{}) error {
 	req := pr.(auth.PHAuth)
-	//b.bk.Pr = req
 	b.BrickInstance().Pr = req
 	return nil
 }

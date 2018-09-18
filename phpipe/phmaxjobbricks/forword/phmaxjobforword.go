@@ -1,17 +1,18 @@
-package authpush
+package maxjobforword
 
 import (
+	"github.com/Jeorch/max-go/phmodel/maxjob"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmpipe"
 	"github.com/alfredyang1986/blackmirror/bmrouter"
+	"github.com/alfredyang1986/blackmirror/bmxmpp"
 	"github.com/alfredyang1986/blackmirror/jsonapi"
-	"github.com/Jeorch/max-go/phmodel/auth"
 	"io"
 	"net/http"
 )
 
-type PHAuthPushBrick struct {
+type PHMaxJobForwardBrick struct {
 	bk *bmpipe.BMBrick
 }
 
@@ -19,20 +20,21 @@ type PHAuthPushBrick struct {
  * brick interface
  *------------------------------------------------*/
 
-func (b *PHAuthPushBrick) Exec() error {
-	var tmp auth.PHAuth = b.bk.Pr.(auth.PHAuth)
-	tmp.InsertBMObject()
-	b.bk.Pr = tmp
-	return nil
+func (b *PHMaxJobForwardBrick) Exec() error {
+	pr := b.BrickInstance().Pr
+	tmp := pr.(maxjob.PHMaxJob)
+	msg, err := jsonapi.ToJsonString(&tmp)
+	err = bmxmpp.Forward("cui@localhost", msg)
+	return err
 }
 
-func (b *PHAuthPushBrick) Prepare(pr interface{}) error {
-	req := pr.(auth.PHAuth)
+func (b *PHMaxJobForwardBrick) Prepare(pr interface{}) error {
+	req := pr.(maxjob.PHMaxJob)
 	b.BrickInstance().Pr = req
 	return nil
 }
 
-func (b *PHAuthPushBrick) Done(pkg string, idx int64, e error) error {
+func (b *PHMaxJobForwardBrick) Done(pkg string, idx int64, e error) error {
 	tmp, _ := bmpkg.GetPkgLen(pkg)
 	if int(idx) < tmp-1 {
 		bmrouter.NextBrickRemote(pkg, idx+1, b)
@@ -40,26 +42,26 @@ func (b *PHAuthPushBrick) Done(pkg string, idx int64, e error) error {
 	return nil
 }
 
-func (b *PHAuthPushBrick) BrickInstance() *bmpipe.BMBrick {
+func (b *PHMaxJobForwardBrick) BrickInstance() *bmpipe.BMBrick {
 	if b.bk == nil {
 		b.bk = &bmpipe.BMBrick{}
 	}
 	return b.bk
 }
 
-func (b *PHAuthPushBrick) ResultTo(w io.Writer) error {
+func (b *PHMaxJobForwardBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(auth.PHAuth)
+	tmp := pr.(maxjob.PHMaxJob)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
 
-func (b *PHAuthPushBrick) Return(w http.ResponseWriter) {
+func (b *PHMaxJobForwardBrick) Return(w http.ResponseWriter) {
 	ec := b.BrickInstance().Err
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval auth.PHAuth = b.BrickInstance().Pr.(auth.PHAuth)
+		var reval maxjob.PHMaxJob = b.BrickInstance().Pr.(maxjob.PHMaxJob)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }
