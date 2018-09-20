@@ -26,17 +26,15 @@ func (b *PHMaxJobGenerateBrick) Exec() error {
 	//TODO:是否需要把单次jobid存入redis中
 	jobid, _ := uuid.GenerateUUID()
 	mj := maxjob.PHMaxJob{
-		Id: jobid,
-		UserID: "jeorch",
+		Id:        jobid,
+		UserID:    "jeorch",
 		CompanyID: "5afa53bded925c05c6f69c54",
-		Date: time.Now().String(),
-		Call: "JobGenerate",
-		Args: map[string]interface{}{
-			"job_id": jobid,
-		},
+		JobID:     jobid,
+		Date:      time.Now().String(),
+		Call:      "JobGenerate",
 	}
 
-	b.BrickInstance().Pr =mj
+	b.BrickInstance().Pr = mj
 	return nil
 }
 

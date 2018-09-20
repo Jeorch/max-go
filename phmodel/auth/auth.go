@@ -8,12 +8,12 @@ import (
 )
 
 type PHAuth struct {
-	Id  		string        			`json:"id"`
-	Id_ 		bson.ObjectId 			`bson:"_id"`
+	Id  string        `json:"id"`
+	Id_ bson.ObjectId `bson:"_id"`
 
-	Profile  	profile.PHProfile    	`json:"profile" jsonapi:"relationships"`
+	Profile profile.PHProfile `json:"profile" jsonapi:"relationships"`
 
-	Token 		string 					`json:"token"`
+	Token string `json:"token"`
 }
 
 /*------------------------------------------------

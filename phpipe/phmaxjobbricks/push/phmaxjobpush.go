@@ -14,6 +14,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"time"
 )
 
 type PHMaxJobPushBrick struct {
@@ -33,29 +34,44 @@ func (b *PHMaxJobPushBrick) Exec() error {
 	var gycDesName string
 	var notArrivalHospCsv string
 	var notArrivalHospDesName string
-	cpa := tmp.Args["cpa"].(string)
-	gyc := tmp.Args["gyc"].(string)
+
+	//err = tmp.CheckJobIdCall()
+	//if err == nil {
+	//	return errors.New("Duplicated push job!")
+	//}
+
+	cpa := tmp.Cpa
+	gyc := tmp.Gycx
 	if cpa != "" {
 		cpaCsv, notArrivalHospCsv, err = cpa2csv(cpa)
 		cpaDesName, err = push2hdfs(cpaCsv)
 		notArrivalHospDesName, err = push2hdfs(notArrivalHospCsv)
-		tmp.Args["cpa"] = cpaDesName
-		tmp.Args["not_arrival_hosp_file"] = notArrivalHospDesName
+		tmp.Cpa = cpaDesName
+		tmp.NotArrivalHospFile = notArrivalHospDesName
 	}
-	if err!=nil {
+	if err != nil {
 		return err
 	}
 	if gyc != "" {
 		gycCsv, err = gyc2csv(gyc)
 		gycDesName, err = push2hdfs(gycCsv)
-		tmp.Args["gyc"] = gycDesName
+		tmp.Gycx = gycDesName
 	}
+	//tmp.Id = tmp.JobID
+	tmp.Date = time.Now().String()
 	b.BrickInstance().Pr = tmp
- 	return err
+
+	return err
 }
 
 func (b *PHMaxJobPushBrick) Prepare(pr interface{}) error {
 	req := pr.(maxjob.PHMaxJob)
+
+	//err := req.CheckJobIdCall()
+	//if err == nil {
+	//	req.PushJobIdCall()
+	//}
+
 	b.BrickInstance().Pr = req
 	return nil
 }
@@ -113,13 +129,54 @@ func gyc2csv(gycFile string) (string, error) {
 }
 
 func push2hdfs(localFile string) (string, error) {
-	//localDir := "resource/" + localFile
 	localDir := localFile
 	fileDesName, _ := uuid.GenerateUUID()
-	fileDesPath := "/workData/Client/"+ fileDesName
 	fmt.Println(fileDesName)
-	client,_ := hdfs.New("192.168.100.137:9000")
+	fileDesPath := "/workData/Client/" + fileDesName
+	client, _ := hdfs.New("192.168.100.137:9000")
 	err := client.CopyToRemote(localDir, fileDesPath)
 	os.Remove(localDir)
 	return fileDesName, err
 }
+
+//func (b *PHMaxJobPushBrick) pushSync(wg *sync.WaitGroup, m *sync.Mutex) error {
+//	m.Lock()
+//
+//	var tmp maxjob.PHMaxJob = b.bk.Pr.(maxjob.PHMaxJob)
+//	var err error
+//	var cpaCsv string
+//	var gycCsv string
+//	var cpaDesName string
+//	var gycDesName string
+//	var notArrivalHospCsv string
+//	var notArrivalHospDesName string
+//
+//	err = tmp.CheckJobIdCall()
+//	if err != nil {
+//		return err
+//	}
+//	cpa := tmp.Cpa
+//	gyc := tmp.Gycx
+//	if cpa != "" {
+//		cpaCsv, notArrivalHospCsv, err = cpa2csv(cpa)
+//		cpaDesName, err = push2hdfs(cpaCsv)
+//		notArrivalHospDesName, err = push2hdfs(notArrivalHospCsv)
+//		tmp.Cpa = cpaDesName
+//		tmp.NotArrivalHospFile = notArrivalHospDesName
+//	}
+//	if err!=nil {
+//		return err
+//	}
+//	if gyc != "" {
+//		gycCsv, err = gyc2csv(gyc)
+//		gycDesName, err = push2hdfs(gycCsv)
+//		tmp.Gycx = gycDesName
+//	}
+//	//tmp.Id = tmp.JobID
+//	tmp.Date = time.Now().String()
+//	b.BrickInstance().Pr = tmp
+//	tmp.PushJobIdCall()
+//	m.Unlock()
+//	wg.Done()
+//	return err
+//}

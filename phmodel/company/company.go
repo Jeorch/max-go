@@ -1,18 +1,17 @@
 package company
 
 import (
-	"gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
 	"github.com/alfredyang1986/blackmirror/bmmodel"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type PHCompany struct {
-	Id        		string            	`json:"id"`
-	Id_       		bson.ObjectId     	`bson:"_id"`
+	Id  string        `json:"id"`
+	Id_ bson.ObjectId `bson:"_id"`
 
-	CompanyName	  	string 				`json:"companyname" bson:"company_name"`
-
+	CompanyName string `json:"companyname" bson:"company_name"`
 }
 
 /*------------------------------------------------

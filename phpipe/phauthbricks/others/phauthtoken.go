@@ -3,13 +3,13 @@ package authothers
 import (
 	"crypto/md5"
 	"fmt"
+	"github.com/Jeorch/max-go/phmodel/auth"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmpipe"
 	"github.com/alfredyang1986/blackmirror/bmrouter"
 	"github.com/alfredyang1986/blackmirror/bmrouter/bmoauth"
 	"github.com/alfredyang1986/blackmirror/jsonapi"
-	"github.com/Jeorch/max-go/phmodel/auth"
 	"io"
 	"net/http"
 )

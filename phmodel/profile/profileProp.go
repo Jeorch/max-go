@@ -1,18 +1,17 @@
 package profile
 
 import (
-	"gopkg.in/mgo.v2/bson"
 	"github.com/alfredyang1986/blackmirror/bmmodel"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type PHProfileProp struct {
-	Id       	 	string            	`json:"id"`
-	Id_       		bson.ObjectId     	`bson:"_id"`
+	Id  string        `json:"id"`
+	Id_ bson.ObjectId `bson:"_id"`
 
-	ProfileID	  	string 				`json:"profileid" bson:"profile_id"`
-	CompanyID	  	string 				`json:"companyid" bson:"company_id"`
-
+	ProfileID string `json:"profileid" bson:"profile_id"`
+	CompanyID string `json:"companyid" bson:"company_id"`
 }
 
 /*------------------------------------------------

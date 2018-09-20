@@ -2,20 +2,19 @@ package profile
 
 import (
 	"github.com/Jeorch/max-go/phmodel/company"
-	"gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
 	"github.com/alfredyang1986/blackmirror/bmmodel"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type PHProfile struct {
-	Id        		string            	`json:"id"`
-	Id_       		bson.ObjectId     	`bson:"_id"`
+	Id  string        `json:"id"`
+	Id_ bson.ObjectId `bson:"_id"`
 
-	Username 		string 				`json:"username" bson:"username"`
-	Password		string 				`json:"password" bson:"password"`
-	Company	  		company.PHCompany 	`json:"company" jsonapi:"relationships"`
-
+	Username string            `json:"username" bson:"username"`
+	Password string            `json:"password" bson:"password"`
+	Company  company.PHCompany `json:"company" jsonapi:"relationships"`
 }
 
 /*------------------------------------------------

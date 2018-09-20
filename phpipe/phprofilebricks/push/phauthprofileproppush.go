@@ -11,8 +11,8 @@ import (
 	"github.com/alfredyang1986/blackmirror/bmrouter"
 	"github.com/alfredyang1986/blackmirror/jsonapi"
 	"gopkg.in/mgo.v2/bson"
-	"net/http"
 	"io"
+	"net/http"
 )
 
 type PHAuthProfileRSPush struct {
@@ -91,4 +91,3 @@ func (b *PHAuthProfileRSPush) Return(w http.ResponseWriter) {
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }
-

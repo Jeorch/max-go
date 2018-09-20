@@ -7,11 +7,11 @@ import (
 )
 
 type PHAuthProp struct {
-	Id        string        `json:"Id"`
-	Id_       bson.ObjectId `bson:"_id"`
+	Id  string        `json:"Id"`
+	Id_ bson.ObjectId `bson:"_id"`
 
-	AuthID    string        `json:"auth_id" bson:"auth_id"`
-	ProfileID string        `json:"profile_id" bson:"profile_id"`
+	AuthID    string `json:"auth_id" bson:"auth_id"`
+	ProfileID string `json:"profile_id" bson:"profile_id"`
 }
 
 /*------------------------------------------------

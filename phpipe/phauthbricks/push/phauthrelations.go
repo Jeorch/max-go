@@ -2,13 +2,13 @@ package authpush
 
 import (
 	"fmt"
+	"github.com/Jeorch/max-go/phmodel/auth"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"
 	"github.com/alfredyang1986/blackmirror/bmpipe"
 	"github.com/alfredyang1986/blackmirror/bmrouter"
 	"github.com/alfredyang1986/blackmirror/jsonapi"
-	"github.com/Jeorch/max-go/phmodel/auth"
 	"gopkg.in/mgo.v2/bson"
 	"io"
 	"net/http"

@@ -22,7 +22,7 @@ type PHMaxJobDeleteBrick struct {
 
 func (b *PHMaxJobDeleteBrick) Exec() error {
 	var tmp maxjob.PHMaxJob = b.bk.Pr.(maxjob.PHMaxJob)
-	jobid := tmp.Args["job_id"]
+	jobid := tmp.JobID
 	//TODO:删除redis中的单次jobid
 	fmt.Println(jobid)
 
