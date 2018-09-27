@@ -1,7 +1,7 @@
 package maxjobgenerate
 
 import (
-	"github.com/Jeorch/max-go/phmodel/maxjob"
+	"github.com/Jeorch/max-go/phmodel/max"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmpipe"
@@ -25,7 +25,7 @@ func (b *PHMaxJobGenerateBrick) Exec() error {
 
 	//TODO:是否需要把单次jobid存入redis中
 	jobid, _ := uuid.GenerateUUID()
-	mj := maxjob.PHMaxJob{
+	mj := max.PHMaxJob{
 		Id:        jobid,
 		UserID:    "jeorch",
 		CompanyID: "5afa53bded925c05c6f69c54",
@@ -59,7 +59,7 @@ func (b *PHMaxJobGenerateBrick) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHMaxJobGenerateBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(maxjob.PHMaxJob)
+	tmp := pr.(max.PHMaxJob)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -69,7 +69,7 @@ func (b *PHMaxJobGenerateBrick) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval maxjob.PHMaxJob = b.BrickInstance().Pr.(maxjob.PHMaxJob)
+		var reval max.PHMaxJob = b.BrickInstance().Pr.(max.PHMaxJob)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }

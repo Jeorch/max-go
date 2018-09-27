@@ -2,8 +2,10 @@ package main
 
 import (
 	"github.com/Jeorch/max-go/phmodel/company"
-	"github.com/Jeorch/max-go/phmodel/maxjob"
+	"github.com/Jeorch/max-go/phmodel/max"
 	"github.com/Jeorch/max-go/phmodel/profile"
+	"github.com/Jeorch/max-go/phmodel/resultcheck"
+	"github.com/Jeorch/max-go/phmodel/samplecheck"
 	"github.com/Jeorch/max-go/phpipe/phauthbricks/others"
 	"github.com/Jeorch/max-go/phpipe/phcompanybricks/push"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/delete"
@@ -12,6 +14,8 @@ import (
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/push"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/send"
 	"github.com/Jeorch/max-go/phpipe/phprofilebricks/push"
+	"github.com/Jeorch/max-go/phpipe/phresultcheck/forward"
+	"github.com/Jeorch/max-go/phpipe/phsamplecheck/forward"
 	"net/http"
 
 	"github.com/Jeorch/max-go/phmodel/auth"
@@ -43,7 +47,11 @@ func main() {
 	fac.RegisterModel("PHProfile", &profile.PHProfile{})
 	fac.RegisterModel("PHProfileProp", &profile.PHProfileProp{})
 
-	fac.RegisterModel("phmaxjob", &maxjob.PHMaxJob{})
+	fac.RegisterModel("phmaxjob", &max.PHMaxJob{})
+
+	fac.RegisterModel("samplecheckselecter", &samplecheck.SampleCheckSelecter{})
+	fac.RegisterModel("samplecheckbody", &samplecheck.SampleCheckBody{})
+	fac.RegisterModel("resultcheck", &resultcheck.ResultCheck{})
 
 	/*------------------------------------------------
 	 * auth find bricks object
@@ -77,13 +85,21 @@ func main() {
 	fac.RegisterModel("PHAuthProfileRSPush", &profilepush.PHAuthProfileRSPush{})
 
 	/*------------------------------------------------
-	 * maxjob bricks object
+	 * max bricks object
 	 *------------------------------------------------*/
 	fac.RegisterModel("PHMaxJobForwardBrick", &maxjobforword.PHMaxJobForwardBrick{})
 	fac.RegisterModel("PHMaxJobGenerateBrick", &maxjobgenerate.PHMaxJobGenerateBrick{})
 	fac.RegisterModel("PHMaxJobDeleteBrick", &maxjobdelete.PHMaxJobDeleteBrick{})
 	fac.RegisterModel("PHMaxJobPushBrick", &maxjobpush.PHMaxJobPushBrick{})
 	fac.RegisterModel("PHMaxJobSendBrick", &maxjobsend.PHMaxJobSendBrick{})
+
+	/*------------------------------------------------
+	 * sample check bricks object
+	 *------------------------------------------------*/
+	fac.RegisterModel("PHSampleCheckSelecterForwardBrick", &samplecheckforward.PHSampleCheckSelecterForwardBrick{})
+	fac.RegisterModel("PHSampleCheckBodyForwardBrick", &samplecheckforward.PHSampleCheckBodyForwardBrick{})
+
+	fac.RegisterModel("PHResultCheckForwardBrick", &resultcheckforward.PHResultCheckForwardBrick{})
 
 	/*------------------------------------------------
 	 * other bricks object

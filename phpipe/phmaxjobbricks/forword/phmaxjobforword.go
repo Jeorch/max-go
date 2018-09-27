@@ -1,7 +1,7 @@
 package maxjobforword
 
 import (
-	"github.com/Jeorch/max-go/phmodel/maxjob"
+	"github.com/Jeorch/max-go/phmodel/max"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmpipe"
@@ -22,14 +22,14 @@ type PHMaxJobForwardBrick struct {
 
 func (b *PHMaxJobForwardBrick) Exec() error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(maxjob.PHMaxJob)
+	tmp := pr.(max.PHMaxJob)
 	msg, err := jsonapi.ToJsonString(&tmp)
 	err = bmxmpp.Forward("cui@localhost", msg)
 	return err
 }
 
 func (b *PHMaxJobForwardBrick) Prepare(pr interface{}) error {
-	req := pr.(maxjob.PHMaxJob)
+	req := pr.(max.PHMaxJob)
 	b.BrickInstance().Pr = req
 	return nil
 }
@@ -51,7 +51,7 @@ func (b *PHMaxJobForwardBrick) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHMaxJobForwardBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(maxjob.PHMaxJob)
+	tmp := pr.(max.PHMaxJob)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -61,7 +61,7 @@ func (b *PHMaxJobForwardBrick) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval maxjob.PHMaxJob = b.BrickInstance().Pr.(maxjob.PHMaxJob)
+		var reval max.PHMaxJob = b.BrickInstance().Pr.(max.PHMaxJob)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }

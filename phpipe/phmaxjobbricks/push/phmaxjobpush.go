@@ -2,7 +2,7 @@ package maxjobpush
 
 import (
 	"fmt"
-	"github.com/Jeorch/max-go/phmodel/maxjob"
+	"github.com/Jeorch/max-go/phmodel/max"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmexcelhandle"
@@ -26,7 +26,7 @@ type PHMaxJobPushBrick struct {
  *------------------------------------------------*/
 
 func (b *PHMaxJobPushBrick) Exec() error {
-	var tmp maxjob.PHMaxJob = b.bk.Pr.(maxjob.PHMaxJob)
+	var tmp max.PHMaxJob = b.bk.Pr.(max.PHMaxJob)
 	var err error
 	var cpaCsv string
 	var gycCsv string
@@ -65,7 +65,7 @@ func (b *PHMaxJobPushBrick) Exec() error {
 }
 
 func (b *PHMaxJobPushBrick) Prepare(pr interface{}) error {
-	req := pr.(maxjob.PHMaxJob)
+	req := pr.(max.PHMaxJob)
 
 	//err := req.CheckJobIdCall()
 	//if err == nil {
@@ -93,7 +93,7 @@ func (b *PHMaxJobPushBrick) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHMaxJobPushBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(maxjob.PHMaxJob)
+	tmp := pr.(max.PHMaxJob)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -103,7 +103,7 @@ func (b *PHMaxJobPushBrick) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval maxjob.PHMaxJob = b.BrickInstance().Pr.(maxjob.PHMaxJob)
+		var reval max.PHMaxJob = b.BrickInstance().Pr.(max.PHMaxJob)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }
@@ -115,7 +115,7 @@ func cpa2csv(cpaFile string) (string, string, error) {
 	localCpa := "resource/" + cpaFile
 	cpa, err = bmexcelhandle.GenerateCSVFromXLSXFile(localCpa, 0)
 	notArrivalHosp, err = bmexcelhandle.GenerateCSVFromXLSXFile(localCpa, 1)
-	os.Remove(localCpa)
+	//os.Remove(localCpa)
 	return cpa, notArrivalHosp, err
 }
 
@@ -124,7 +124,7 @@ func gyc2csv(gycFile string) (string, error) {
 	var gyc string
 	localGyc := "resource/" + gycFile
 	gyc, err = bmexcelhandle.GenerateCSVFromXLSXFile(localGyc, 0)
-	os.Remove(localGyc)
+	//os.Remove(localGyc)
 	return gyc, err
 }
 
@@ -142,7 +142,7 @@ func push2hdfs(localFile string) (string, error) {
 //func (b *PHMaxJobPushBrick) pushSync(wg *sync.WaitGroup, m *sync.Mutex) error {
 //	m.Lock()
 //
-//	var tmp maxjob.PHMaxJob = b.bk.Pr.(maxjob.PHMaxJob)
+//	var tmp max.PHMaxJob = b.bk.Pr.(max.PHMaxJob)
 //	var err error
 //	var cpaCsv string
 //	var gycCsv string
