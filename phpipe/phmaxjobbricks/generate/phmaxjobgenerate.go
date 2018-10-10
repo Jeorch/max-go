@@ -24,6 +24,7 @@ type PHMaxJobGenerateBrick struct {
 func (b *PHMaxJobGenerateBrick) Exec() error {
 
 	//TODO:是否需要把单次jobid存入redis中
+	//TODO:等做完nhwa, 改成动态获取userid和companyid
 	jobid, _ := uuid.GenerateUUID()
 	mj := max.PHMaxJob{
 		Id:        jobid,

@@ -19,7 +19,7 @@ type PHMaxJob struct {
 	JobID              string `json:"job_id" bson:"job_id"`
 	Date               string `json:"date" bson:"date"`
 	Call               string `json:"call" bson:"call"`
-	Percentage         string `json:"percentage" bson:"percentage"`
+	Percentage         int 	  `json:"percentage" bson:"percentage"`
 	Message            string `json:"message" bson:"message"`
 	Cpa                string `json:"cpa" bson:"cpa"`
 	Gycx               string `json:"gycx" bson:"gycx"`

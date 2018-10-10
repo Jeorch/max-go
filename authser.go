@@ -9,7 +9,6 @@ import (
 	"github.com/Jeorch/max-go/phpipe/phauthbricks/others"
 	"github.com/Jeorch/max-go/phpipe/phcompanybricks/push"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/delete"
-	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/forword"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/generate"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/push"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/send"
@@ -87,7 +86,6 @@ func main() {
 	/*------------------------------------------------
 	 * max bricks object
 	 *------------------------------------------------*/
-	fac.RegisterModel("PHMaxJobForwardBrick", &maxjobforword.PHMaxJobForwardBrick{})
 	fac.RegisterModel("PHMaxJobGenerateBrick", &maxjobgenerate.PHMaxJobGenerateBrick{})
 	fac.RegisterModel("PHMaxJobDeleteBrick", &maxjobdelete.PHMaxJobDeleteBrick{})
 	fac.RegisterModel("PHMaxJobPushBrick", &maxjobpush.PHMaxJobPushBrick{})
