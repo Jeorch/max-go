@@ -1,20 +1,14 @@
 package maxjobpush
 
 import (
-	"fmt"
 	"github.com/Jeorch/max-go/phmodel/max"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmerror"
-	"github.com/alfredyang1986/blackmirror/bmexcelhandle"
 	"github.com/alfredyang1986/blackmirror/bmpipe"
 	"github.com/alfredyang1986/blackmirror/bmrouter"
 	"github.com/alfredyang1986/blackmirror/jsonapi"
-	"github.com/colinmarc/hdfs"
-	"github.com/hashicorp/go-uuid"
 	"io"
 	"net/http"
-	"os"
-	"time"
 )
 
 type PHMaxJobPushBrick struct {
@@ -28,39 +22,37 @@ type PHMaxJobPushBrick struct {
 func (b *PHMaxJobPushBrick) Exec() error {
 	var tmp max.PHMaxJob = b.bk.Pr.(max.PHMaxJob)
 	var err error
-	var cpaCsv string
-	var gycCsv string
-	var cpaDesName string
-	var gycDesName string
-	var notArrivalHospCsv string
-	var notArrivalHospDesName string
 
-	//err = tmp.CheckJobIdCall()
-	//if err == nil {
-	//	return errors.New("Duplicated push job!")
+	//var cpaCsv string
+	//var gycCsv string
+	//var cpaDesName string
+	//var gycDesName string
+	//var notArrivalHospCsv string
+	//var notArrivalHospDesName string
+	//
+	//cpa := tmp.Cpa
+	//gyc := tmp.Gycx
+	//if cpa != "" {
+	//	cpaCsv, notArrivalHospCsv, err = cpa2csv(cpa)
+	//	cpaDesName, err = push2hdfs(cpaCsv)
+	//	notArrivalHospDesName, err = push2hdfs(notArrivalHospCsv)
+	//	tmp.Cpa = cpaDesName
+	//	tmp.NotArrivalHospFile = notArrivalHospDesName
 	//}
-
-	cpa := tmp.Cpa
-	gyc := tmp.Gycx
-	if cpa != "" {
-		cpaCsv, notArrivalHospCsv, err = cpa2csv(cpa)
-		cpaDesName, err = push2hdfs(cpaCsv)
-		notArrivalHospDesName, err = push2hdfs(notArrivalHospCsv)
-		tmp.Cpa = cpaDesName
-		tmp.NotArrivalHospFile = notArrivalHospDesName
-	}
-	if err != nil {
-		return err
-	}
-	if gyc != "" {
-		gycCsv, err = gyc2csv(gyc)
-		gycDesName, err = push2hdfs(gycCsv)
-		tmp.Gycx = gycDesName
-	}
+	//if err != nil {
+	//	return err
+	//}
+	//if gyc != "" {
+	//	gycCsv, err = gyc2csv(gyc)
+	//	gycDesName, err = push2hdfs(gycCsv)
+	//	tmp.Gycx = gycDesName
+	//}
+	////TODO：JobID的问题
 	//tmp.Id = tmp.JobID
-	tmp.Date = time.Now().String()
-	b.BrickInstance().Pr = tmp
+	//tmp.Date = time.Now().String()
 
+	err = tmp.CheckJobIdCall()
+	b.BrickInstance().Pr = tmp
 	return err
 }
 
@@ -106,37 +98,6 @@ func (b *PHMaxJobPushBrick) Return(w http.ResponseWriter) {
 		var reval max.PHMaxJob = b.BrickInstance().Pr.(max.PHMaxJob)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
-}
-
-func cpa2csv(cpaFile string) (string, string, error) {
-	var err error
-	var cpa string
-	var notArrivalHosp string
-	localCpa := "resource/" + cpaFile
-	cpa, err = bmexcelhandle.GenerateCSVFromXLSXFile(localCpa, 0)
-	notArrivalHosp, err = bmexcelhandle.GenerateCSVFromXLSXFile(localCpa, 1)
-	//os.Remove(localCpa)
-	return cpa, notArrivalHosp, err
-}
-
-func gyc2csv(gycFile string) (string, error) {
-	var err error
-	var gyc string
-	localGyc := "resource/" + gycFile
-	gyc, err = bmexcelhandle.GenerateCSVFromXLSXFile(localGyc, 0)
-	//os.Remove(localGyc)
-	return gyc, err
-}
-
-func push2hdfs(localFile string) (string, error) {
-	localDir := localFile
-	fileDesName, _ := uuid.GenerateUUID()
-	fmt.Println(fileDesName)
-	fileDesPath := "/workData/Client/" + fileDesName
-	client, _ := hdfs.New("192.168.100.137:9000")
-	err := client.CopyToRemote(localDir, fileDesPath)
-	os.Remove(localDir)
-	return fileDesName, err
 }
 
 //func (b *PHMaxJobPushBrick) pushSync(wg *sync.WaitGroup, m *sync.Mutex) error {

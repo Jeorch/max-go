@@ -2,12 +2,14 @@ package main
 
 import (
 	"github.com/Jeorch/max-go/phmodel/company"
+	"github.com/Jeorch/max-go/phmodel/export"
 	"github.com/Jeorch/max-go/phmodel/max"
 	"github.com/Jeorch/max-go/phmodel/profile"
 	"github.com/Jeorch/max-go/phmodel/resultcheck"
 	"github.com/Jeorch/max-go/phmodel/samplecheck"
 	"github.com/Jeorch/max-go/phpipe/phauthbricks/others"
 	"github.com/Jeorch/max-go/phpipe/phcompanybricks/push"
+	"github.com/Jeorch/max-go/phpipe/phexportbricks/forward"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/delete"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/generate"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/push"
@@ -51,6 +53,7 @@ func main() {
 	fac.RegisterModel("samplecheckselecter", &samplecheck.SampleCheckSelecter{})
 	fac.RegisterModel("samplecheckbody", &samplecheck.SampleCheckBody{})
 	fac.RegisterModel("resultcheck", &resultcheck.ResultCheck{})
+	fac.RegisterModel("exportmaxresult", &export.ExportMaxResult{})
 
 	/*------------------------------------------------
 	 * auth find bricks object
@@ -97,7 +100,15 @@ func main() {
 	fac.RegisterModel("PHSampleCheckSelecterForwardBrick", &samplecheckforward.PHSampleCheckSelecterForwardBrick{})
 	fac.RegisterModel("PHSampleCheckBodyForwardBrick", &samplecheckforward.PHSampleCheckBodyForwardBrick{})
 
+	/*------------------------------------------------
+	 * result check bricks object
+	 *------------------------------------------------*/
 	fac.RegisterModel("PHResultCheckForwardBrick", &resultcheckforward.PHResultCheckForwardBrick{})
+
+	/*------------------------------------------------
+	 * export bricks object
+	 *------------------------------------------------*/
+	fac.RegisterModel("PHExportMaxResultForwardBrick", &exportforward.PHExportMaxResultForwardBrick{})
 
 	/*------------------------------------------------
 	 * other bricks object

@@ -1,12 +1,15 @@
 package max
 
 import (
-	"errors"
 	"fmt"
+	"github.com/alfredyang1986/blackmirror/bmexcelhandle"
 	"github.com/alfredyang1986/blackmirror/bmmodel"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"
+	"github.com/colinmarc/hdfs"
 	"github.com/go-redis/redis"
+	"github.com/hashicorp/go-uuid"
 	"gopkg.in/mgo.v2/bson"
+	"os"
 	"time"
 )
 
@@ -88,6 +91,13 @@ func (bd *PHMaxJob) UpdateBMObject(req request.Request) error {
 }
 
 func (bd *PHMaxJob) CheckJobIdCall() error {
+
+	//var err error
+
+	var cpaDesName string
+	var notArrivalHospDesName string
+	var gycDesName string
+
 	client := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "", // no password set
@@ -99,36 +109,93 @@ func (bd *PHMaxJob) CheckJobIdCall() error {
 	call := bd.Call
 	jobCall := jobID + call
 
-	//defer client.Del(jobCall)
+	cpa, err := client.HGet(jobCall, "cpa").Result()
 
-	r, err := client.Get(jobCall).Result()
-	if r == "" {
-		return nil
-	} else if r != "" {
-		return errors.New("exist job_id call job")
+	if cpa != "" {
+		notArrivalHospFile, _ := client.HGet(jobCall, "not_arrival_hosp_file").Result()
+		gycx, _ := client.HGet(jobCall, "gycx").Result()
+
+		bd.Cpa = cpa
+		bd.NotArrivalHospFile = notArrivalHospFile
+		bd.Gycx = gycx
 	} else {
-		return err
+
+		cpaDesName, notArrivalHospDesName, gycDesName, err = pushCpaGyc(bd.Cpa, bd.Gycx)
+
+		cpa_tmp, _ := client.HGet(jobCall, "cpa").Result()
+		if cpa_tmp != "" {
+			notArrivalHospFile_tmp, _ := client.HGet(jobCall, "not_arrival_hosp_file").Result()
+			gycx_tmp, _ := client.HGet(jobCall, "gycx").Result()
+
+			bd.Cpa = cpa_tmp
+			bd.NotArrivalHospFile = notArrivalHospFile_tmp
+			bd.Gycx = gycx_tmp
+			return nil
+		}
+
+		bd.Cpa = cpaDesName
+		bd.NotArrivalHospFile = notArrivalHospDesName
+		bd.Gycx = gycDesName
+
+		_, err = client.HSet(jobCall, "cpa", bd.Cpa).Result()
+		_, err = client.HSet(jobCall, "not_arrival_hosp_file", bd.NotArrivalHospFile).Result()
+		_, err = client.HSet(jobCall, "gycx", bd.Gycx).Result()
+
+		client.Expire(jobCall, 60 * time.Second)
 	}
+	bd.Id = bd.JobID
+	bd.Date = time.Now().String()
+	return err
+
 }
 
-func (bd *PHMaxJob) PushJobIdCall() error {
-	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
-	defer client.Close()
+func pushCpaGyc(cpa string, gyc string) (string, string, string, error) {
+	var err error
+	var cpaCsv string
+	var gycCsv string
+	var cpaDesName string
+	var gycDesName string
+	var notArrivalHospCsv string
+	var notArrivalHospDesName string
+	if cpa != "" {
+		cpaCsv, notArrivalHospCsv, err = cpa2csv(cpa)
+		cpaDesName, err = push2hdfs(cpaCsv)
+		notArrivalHospDesName, err = push2hdfs(notArrivalHospCsv)
+	}
+	if gyc != "" {
+		gycCsv, err = gyc2csv(gyc)
+		gycDesName, err = push2hdfs(gycCsv)
+	}
+	return cpaDesName, notArrivalHospDesName, gycDesName, err
+}
 
-	pipe := client.Pipeline()
+func cpa2csv(cpaFile string) (string, string, error) {
+	var err error
+	var cpa string
+	var notArrivalHosp string
+	localCpa := "resource/" + cpaFile
+	cpa, err = bmexcelhandle.GenerateCSVFromXLSXFile(localCpa, 0)
+	notArrivalHosp, err = bmexcelhandle.GenerateCSVFromXLSXFile(localCpa, 1)
+	//os.Remove(localCpa)
+	return cpa, notArrivalHosp, err
+}
 
-	jobID := bd.JobID
-	call := bd.Call
-	jobCall := jobID + call
+func gyc2csv(gycFile string) (string, error) {
+	var err error
+	var gyc string
+	localGyc := "resource/" + gycFile
+	gyc, err = bmexcelhandle.GenerateCSVFromXLSXFile(localGyc, 0)
+	//os.Remove(localGyc)
+	return gyc, err
+}
 
-	pipe.Incr(jobCall)
-	pipe.Expire(jobCall, 1*time.Minute)
-	_, err := pipe.Exec()
-
-	fmt.Println(jobCall)
-	return err
+func push2hdfs(localFile string) (string, error) {
+	localDir := localFile
+	fileDesName, _ := uuid.GenerateUUID()
+	fmt.Println(fileDesName)
+	fileDesPath := "/workData/Client/" + fileDesName
+	client, _ := hdfs.New("192.168.100.137:9000")
+	err := client.CopyToRemote(localDir, fileDesPath)
+	os.Remove(localDir)
+	return fileDesName, err
 }
