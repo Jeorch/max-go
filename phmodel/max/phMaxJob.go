@@ -176,7 +176,7 @@ func cpa2csv(cpaFile string) (string, string, error) {
 	localCpa := "resource/" + cpaFile
 	cpa, err = bmexcelhandle.GenerateCSVFromXLSXFile(localCpa, 0)
 	notArrivalHosp, err = bmexcelhandle.GenerateCSVFromXLSXFile(localCpa, 1)
-	//os.Remove(localCpa)
+	os.Remove(localCpa)
 	return cpa, notArrivalHosp, err
 }
 
@@ -185,7 +185,7 @@ func gyc2csv(gycFile string) (string, error) {
 	var gyc string
 	localGyc := "resource/" + gycFile
 	gyc, err = bmexcelhandle.GenerateCSVFromXLSXFile(localGyc, 0)
-	//os.Remove(localGyc)
+	os.Remove(localGyc)
 	return gyc, err
 }
 
