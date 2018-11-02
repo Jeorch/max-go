@@ -17,7 +17,9 @@ import (
 	"github.com/Jeorch/max-go/phpipe/phprofilebricks/push"
 	"github.com/Jeorch/max-go/phpipe/phresultcheck/forward"
 	"github.com/Jeorch/max-go/phpipe/phsamplecheck/forward"
+	"github.com/alfredyang1986/blackmirror/bmconfighandle"
 	"net/http"
+	"sync"
 
 	"github.com/Jeorch/max-go/phmodel/auth"
 	"github.com/Jeorch/max-go/phpipe/phauthbricks/find"
@@ -116,5 +118,11 @@ func main() {
 	fac.RegisterModel("PHAuthGenerateToken", &authothers.PHAuthGenerateToken{})
 
 	r := bmrouter.BindRouter()
-	http.ListenAndServe(":8081", r)
+	//http.ListenAndServe(":8081", r)
+
+	var once sync.Once
+	var bmRouter bmconfig.BMRouterConfig
+	once.Do(bmRouter.GenerateConfig)
+
+	http.ListenAndServe(":" + bmRouter.Port, r)
 }
