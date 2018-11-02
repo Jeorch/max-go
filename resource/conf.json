@@ -2,66 +2,66 @@
     {
         "name":"tBMAuthRS2AuthBrick",
         "host":"localhost",
-        "port":8080
+        "port":8081
     },
     {
         "name":"tBMAuthFindBrick",
         "host":"localhost",
-        "port":8080
+        "port":8081
     },
     {
         "name":"tBMAuthPhoneFindBrick",
         "host":"localhost",
-        "port":8080
+        "port":8081
     },
     {
         "name":"tBMPhone2AuthRSBrick",
         "host":"localhost",
-        "port":8080
+        "port":8081
     },
     {
         "name":"tBMAuthPushBrick",
         "host":"localhost",
-        "port":8080
+        "port":8081
     },
     {
         "name":"tBMAuthRSPushBrick",
         "host":"localhost",
-        "port":8080
+        "port":8081
     },
     {
         "name":"tBMPhonePushBrick",
         "host":"localhost",
-        "port":8080
+        "port":8081
     },
     {
         "name":"tBMWechatPushBrick",
         "host":"localhost",
-        "port":8080
+        "port":8081
     },
     {
         "name":"tBMAuthPhoneUpdateBrick",
         "host":"localhost",
-        "port":8080
+        "port":8081
     },
     {
         "name":"tBMAuthWechatUpdateBrick",
         "host":"localhost",
-        "port":8080
+        "port":8081
     },
     {
         "name":"tBMProfilePushBrick",
         "host":"localhost",
-        "port":8080
+        "port":8081
     },
     {
         "name":"tBMFindProfileBrick",
         "host":"localhost",
-        "port":8080
+        "port":8081
     },
     {
         "name":"tBMCompanyPushBrick",
         "host":"localhost",
-        "port":8080
+        "port":8081
     }
 ]

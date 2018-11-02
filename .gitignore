@@ -2,3 +2,5 @@
 .idea
 dump.*
 max-go
+resource/*.xlsx
+resource/*.csv

@@ -2,17 +2,24 @@ package main
 
 import (
 	"github.com/Jeorch/max-go/phmodel/company"
-	"github.com/Jeorch/max-go/phmodel/maxjob"
+	"github.com/Jeorch/max-go/phmodel/export"
+	"github.com/Jeorch/max-go/phmodel/max"
 	"github.com/Jeorch/max-go/phmodel/profile"
+	"github.com/Jeorch/max-go/phmodel/resultcheck"
+	"github.com/Jeorch/max-go/phmodel/samplecheck"
 	"github.com/Jeorch/max-go/phpipe/phauthbricks/others"
 	"github.com/Jeorch/max-go/phpipe/phcompanybricks/push"
+	"github.com/Jeorch/max-go/phpipe/phexportbricks/forward"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/delete"
-	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/forword"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/generate"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/push"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/send"
 	"github.com/Jeorch/max-go/phpipe/phprofilebricks/push"
+	"github.com/Jeorch/max-go/phpipe/phresultcheck/forward"
+	"github.com/Jeorch/max-go/phpipe/phsamplecheck/forward"
+	"github.com/alfredyang1986/blackmirror/bmconfighandle"
 	"net/http"
+	"sync"
 
 	"github.com/Jeorch/max-go/phmodel/auth"
 	"github.com/Jeorch/max-go/phpipe/phauthbricks/find"
@@ -43,7 +50,12 @@ func main() {
 	fac.RegisterModel("PHProfile", &profile.PHProfile{})
 	fac.RegisterModel("PHProfileProp", &profile.PHProfileProp{})
 
-	fac.RegisterModel("phmaxjob", &maxjob.PHMaxJob{})
+	fac.RegisterModel("phmaxjob", &max.PHMaxJob{})
+
+	fac.RegisterModel("samplecheckselecter", &samplecheck.SampleCheckSelecter{})
+	fac.RegisterModel("samplecheckbody", &samplecheck.SampleCheckBody{})
+	fac.RegisterModel("resultcheck", &resultcheck.ResultCheck{})
+	fac.RegisterModel("exportmaxresult", &export.ExportMaxResult{})
 
 	/*------------------------------------------------
 	 * auth find bricks object
@@ -77,13 +89,28 @@ func main() {
 	fac.RegisterModel("PHAuthProfileRSPush", &profilepush.PHAuthProfileRSPush{})
 
 	/*------------------------------------------------
-	 * maxjob bricks object
+	 * max bricks object
 	 *------------------------------------------------*/
-	fac.RegisterModel("PHMaxJobForwardBrick", &maxjobforword.PHMaxJobForwardBrick{})
 	fac.RegisterModel("PHMaxJobGenerateBrick", &maxjobgenerate.PHMaxJobGenerateBrick{})
 	fac.RegisterModel("PHMaxJobDeleteBrick", &maxjobdelete.PHMaxJobDeleteBrick{})
 	fac.RegisterModel("PHMaxJobPushBrick", &maxjobpush.PHMaxJobPushBrick{})
 	fac.RegisterModel("PHMaxJobSendBrick", &maxjobsend.PHMaxJobSendBrick{})
+
+	/*------------------------------------------------
+	 * sample check bricks object
+	 *------------------------------------------------*/
+	fac.RegisterModel("PHSampleCheckSelecterForwardBrick", &samplecheckforward.PHSampleCheckSelecterForwardBrick{})
+	fac.RegisterModel("PHSampleCheckBodyForwardBrick", &samplecheckforward.PHSampleCheckBodyForwardBrick{})
+
+	/*------------------------------------------------
+	 * result check bricks object
+	 *------------------------------------------------*/
+	fac.RegisterModel("PHResultCheckForwardBrick", &resultcheckforward.PHResultCheckForwardBrick{})
+
+	/*------------------------------------------------
+	 * export bricks object
+	 *------------------------------------------------*/
+	fac.RegisterModel("PHExportMaxResultForwardBrick", &exportforward.PHExportMaxResultForwardBrick{})
 
 	/*------------------------------------------------
 	 * other bricks object
@@ -91,5 +118,11 @@ func main() {
 	fac.RegisterModel("PHAuthGenerateToken", &authothers.PHAuthGenerateToken{})
 
 	r := bmrouter.BindRouter()
-	http.ListenAndServe(":8081", r)
+	//http.ListenAndServe(":8081", r)
+
+	var once sync.Once
+	var bmRouter bmconfig.BMRouterConfig
+	once.Do(bmRouter.GenerateConfig)
+
+	http.ListenAndServe(":" + bmRouter.Port, r)
 }

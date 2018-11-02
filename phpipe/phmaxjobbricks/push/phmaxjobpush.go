@@ -1,18 +1,14 @@
 package maxjobpush
 
 import (
-	"fmt"
-	"github.com/Jeorch/max-go/phmodel/maxjob"
+	"github.com/Jeorch/max-go/phmodel/max"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmpipe"
 	"github.com/alfredyang1986/blackmirror/bmrouter"
 	"github.com/alfredyang1986/blackmirror/jsonapi"
-	"github.com/colinmarc/hdfs"
-	"github.com/hashicorp/go-uuid"
 	"io"
 	"net/http"
-	"os"
 )
 
 type PHMaxJobPushBrick struct {
@@ -24,29 +20,17 @@ type PHMaxJobPushBrick struct {
  *------------------------------------------------*/
 
 func (b *PHMaxJobPushBrick) Exec() error {
-	var tmp maxjob.PHMaxJob = b.bk.Pr.(maxjob.PHMaxJob)
+	var tmp max.PHMaxJob = b.bk.Pr.(max.PHMaxJob)
 	var err error
-	var cpaDes string
-	var gycDes string
-	cpa := tmp.Args["cpa"].(string)
-	gyc := tmp.Args["gyc"].(string)
-	if cpa != "" {
-		cpaDes, err = push2hdfs(cpa)
-		tmp.Args["cpa"] = cpaDes
-	}
-	if err!=nil {
-		return err
-	}
-	if gyc != "" {
-		gycDes, err = push2hdfs(gyc)
-		tmp.Args["gyc"] = gycDes
-	}
+
+	err = tmp.CheckJobIdCall()
 	b.BrickInstance().Pr = tmp
- 	return err
+	return err
 }
 
 func (b *PHMaxJobPushBrick) Prepare(pr interface{}) error {
-	req := pr.(maxjob.PHMaxJob)
+	req := pr.(max.PHMaxJob)
+
 	b.BrickInstance().Pr = req
 	return nil
 }
@@ -68,7 +52,7 @@ func (b *PHMaxJobPushBrick) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHMaxJobPushBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(maxjob.PHMaxJob)
+	tmp := pr.(max.PHMaxJob)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -78,18 +62,7 @@ func (b *PHMaxJobPushBrick) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval maxjob.PHMaxJob = b.BrickInstance().Pr.(maxjob.PHMaxJob)
+		var reval max.PHMaxJob = b.BrickInstance().Pr.(max.PHMaxJob)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
-}
-
-func push2hdfs(localFile string) (string, error) {
-	localDir := "resource/" + localFile
-	fileDesName, _ := uuid.GenerateUUID()
-	fileDesPath := "/workData/Client/"+ fileDesName
-	fmt.Println(fileDesName)
-	client,_ := hdfs.New("192.168.100.137:9000")
-	err := client.CopyToRemote(localDir, fileDesPath)
-	os.Remove(localDir)
-	return fileDesName, err
 }

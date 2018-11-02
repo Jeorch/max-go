@@ -1,7 +1,7 @@
 package maxjobgenerate
 
 import (
-	"github.com/Jeorch/max-go/phmodel/maxjob"
+	"github.com/Jeorch/max-go/phmodel/max"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmpipe"
@@ -24,23 +24,21 @@ type PHMaxJobGenerateBrick struct {
 func (b *PHMaxJobGenerateBrick) Exec() error {
 
 	//TODO:是否需要把单次jobid存入redis中
-	jobid, _ := uuid.GenerateUUID()
-	mj := maxjob.PHMaxJob{
-		Id: jobid,
-		UserID: "jeorch",
-		CompanyID: "5afa53bded925c05c6f69c54",
-		Date: time.Now().String(),
-		Call: "JobGenerate",
-		Args: map[string]interface{}{
-			"job_id": jobid,
-		},
-	}
+	//TODO:等做完nhwa, 改成动态获取userid和companyid
+	jobId, _ := uuid.GenerateUUID()
 
-	b.BrickInstance().Pr =mj
+	maxJob := b.bk.Pr.(max.PHMaxJob)
+	maxJob.Id = jobId
+	maxJob.JobID = jobId
+	maxJob.Date = time.Now().String()
+
+	b.BrickInstance().Pr = maxJob
 	return nil
 }
 
 func (b *PHMaxJobGenerateBrick) Prepare(pr interface{}) error {
+	req := pr.(max.PHMaxJob)
+	b.BrickInstance().Pr = req
 	return nil
 }
 
@@ -61,7 +59,7 @@ func (b *PHMaxJobGenerateBrick) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHMaxJobGenerateBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(maxjob.PHMaxJob)
+	tmp := pr.(max.PHMaxJob)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -71,7 +69,7 @@ func (b *PHMaxJobGenerateBrick) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval maxjob.PHMaxJob = b.BrickInstance().Pr.(maxjob.PHMaxJob)
+		var reval max.PHMaxJob = b.BrickInstance().Pr.(max.PHMaxJob)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }
