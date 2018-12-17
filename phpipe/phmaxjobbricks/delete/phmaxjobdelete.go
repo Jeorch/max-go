@@ -21,7 +21,7 @@ type PHMaxJobDeleteBrick struct {
  *------------------------------------------------*/
 
 func (b *PHMaxJobDeleteBrick) Exec() error {
-	var tmp max.PHMaxJob = b.bk.Pr.(max.PHMaxJob)
+	var tmp max.Phmaxjob = b.bk.Pr.(max.Phmaxjob)
 	jobid := tmp.JobID
 	//TODO:删除redis中的单次jobid
 	fmt.Println(jobid)
@@ -30,7 +30,7 @@ func (b *PHMaxJobDeleteBrick) Exec() error {
 }
 
 func (b *PHMaxJobDeleteBrick) Prepare(pr interface{}) error {
-	req := pr.(max.PHMaxJob)
+	req := pr.(max.Phmaxjob)
 	b.BrickInstance().Pr = req
 	return nil
 }
@@ -52,7 +52,7 @@ func (b *PHMaxJobDeleteBrick) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHMaxJobDeleteBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(max.PHMaxJob)
+	tmp := pr.(max.Phmaxjob)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -62,7 +62,7 @@ func (b *PHMaxJobDeleteBrick) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval max.PHMaxJob = b.BrickInstance().Pr.(max.PHMaxJob)
+		var reval max.Phmaxjob = b.BrickInstance().Pr.(max.Phmaxjob)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }

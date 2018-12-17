@@ -21,7 +21,7 @@ type PHMaxJobSendBrick struct {
  *------------------------------------------------*/
 
 func (b *PHMaxJobSendBrick) Exec() error {
-	var maxjob max.PHMaxJob = b.bk.Pr.(max.PHMaxJob)
+	var maxjob max.Phmaxjob = b.bk.Pr.(max.Phmaxjob)
 	msg, err := jsonapi.ToJsonString(&maxjob)
 	println(msg)
 	err = bmxmpp.Forward("cui@localhost", msg)
@@ -29,7 +29,7 @@ func (b *PHMaxJobSendBrick) Exec() error {
 }
 
 func (b *PHMaxJobSendBrick) Prepare(pr interface{}) error {
-	req := pr.(max.PHMaxJob)
+	req := pr.(max.Phmaxjob)
 	b.BrickInstance().Pr = req
 	return nil
 }
@@ -51,7 +51,7 @@ func (b *PHMaxJobSendBrick) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHMaxJobSendBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(max.PHMaxJob)
+	tmp := pr.(max.Phmaxjob)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -61,7 +61,7 @@ func (b *PHMaxJobSendBrick) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval max.PHMaxJob = b.BrickInstance().Pr.(max.PHMaxJob)
+		var reval max.Phmaxjob = b.BrickInstance().Pr.(max.Phmaxjob)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }

@@ -27,7 +27,7 @@ func (b *PHMaxJobGenerateBrick) Exec() error {
 	//TODO:等做完nhwa, 改成动态获取userid和companyid
 	jobId, _ := uuid.GenerateUUID()
 
-	maxJob := b.bk.Pr.(max.PHMaxJob)
+	maxJob := b.bk.Pr.(max.Phmaxjob)
 	maxJob.Id = jobId
 	maxJob.JobID = jobId
 	maxJob.Date = time.Now().String()
@@ -37,7 +37,7 @@ func (b *PHMaxJobGenerateBrick) Exec() error {
 }
 
 func (b *PHMaxJobGenerateBrick) Prepare(pr interface{}) error {
-	req := pr.(max.PHMaxJob)
+	req := pr.(max.Phmaxjob)
 	b.BrickInstance().Pr = req
 	return nil
 }
@@ -59,7 +59,7 @@ func (b *PHMaxJobGenerateBrick) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHMaxJobGenerateBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(max.PHMaxJob)
+	tmp := pr.(max.Phmaxjob)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -69,7 +69,7 @@ func (b *PHMaxJobGenerateBrick) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval max.PHMaxJob = b.BrickInstance().Pr.(max.PHMaxJob)
+		var reval max.Phmaxjob = b.BrickInstance().Pr.(max.Phmaxjob)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }

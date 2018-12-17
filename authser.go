@@ -38,31 +38,29 @@ func main() {
 	/*------------------------------------------------
 	 * model object
 	 *------------------------------------------------*/
-	fac.RegisterModel("request", &request.Request{})
-	fac.RegisterModel("eqcond", &request.EQCond{})
-	fac.RegisterModel("upcond", &request.UPCond{})
-	fac.RegisterModel("fmcond", &request.FMUCond{})
-	fac.RegisterModel("BMErrorNode", &bmerror.BMErrorNode{})
+	fac.RegisterModel("Request", &request.Request{})
+	fac.RegisterModel("Eqcond", &request.Eqcond{})
+	fac.RegisterModel("Upcond", &request.Upcond{})
+	fac.RegisterModel("Fmcond", &request.Fmcond{})
+	fac.RegisterModel("BmErrorNode", &bmerror.BmErrorNode{})
 
-	fac.RegisterModel("PHAuth", &auth.PHAuth{})
-	fac.RegisterModel("PHAuthProp", &auth.PHAuthProp{})
-	fac.RegisterModel("PHCompany", &company.PHCompany{})
-	fac.RegisterModel("PHProfile", &profile.PHProfile{})
-	fac.RegisterModel("PHProfileProp", &profile.PHProfileProp{})
+	fac.RegisterModel("PhAuth", &auth.PhAuth{})
+	fac.RegisterModel("PhAuthProp", &auth.PhAuthProp{})
+	fac.RegisterModel("PhCompany", &company.PhCompany{})
+	fac.RegisterModel("PhProfile", &profile.PhProfile{})
+	fac.RegisterModel("PhProfileProp", &profile.PhProfileProp{})
 
-	fac.RegisterModel("phmaxjob", &max.PHMaxJob{})
+	fac.RegisterModel("Phmaxjob", &max.Phmaxjob{})
 
-	fac.RegisterModel("samplecheckselecter", &samplecheck.SampleCheckSelecter{})
-	fac.RegisterModel("samplecheckbody", &samplecheck.SampleCheckBody{})
-	fac.RegisterModel("resultcheck", &resultcheck.ResultCheck{})
-	fac.RegisterModel("exportmaxresult", &export.ExportMaxResult{})
+	fac.RegisterModel("SampleCheckSelecter", &samplecheck.SampleCheckSelecter{})
+	fac.RegisterModel("SampleCheckBody", &samplecheck.SampleCheckBody{})
+	fac.RegisterModel("ResultCheck", &resultcheck.ResultCheck{})
+	fac.RegisterModel("ExportMaxResult", &export.ExportMaxResult{})
 
 	/*------------------------------------------------
 	 * auth find bricks object
 	 *------------------------------------------------*/
 	fac.RegisterModel("PHAuthFindProfileBrick", &authfind.PHAuthFindProfileBrick{})
-	//fac.RegisterModel("PHProfile2ProfileProp", &authfind.PHProfile2ProfileProp{})
-	//fac.RegisterModel("PHProfileProp2ProfileBrick", &authfind.PHProfileProp2ProfileBrick{})
 	fac.RegisterModel("PHProfile2AuthProp", &authfind.PHProfile2AuthProp{})
 	fac.RegisterModel("PHAuthProp2AuthBrick", &authfind.PHAuthProp2AuthBrick{})
 
@@ -94,6 +92,7 @@ func main() {
 	fac.RegisterModel("PHMaxJobGenerateBrick", &maxjobgenerate.PHMaxJobGenerateBrick{})
 	fac.RegisterModel("PHMaxJobDeleteBrick", &maxjobdelete.PHMaxJobDeleteBrick{})
 	fac.RegisterModel("PHMaxJobPushBrick", &maxjobpush.PHMaxJobPushBrick{})
+	fac.RegisterModel("PHMaxJobPushPanelBrick", &maxjobpush.PHMaxJobPushPanelBrick{})
 	fac.RegisterModel("PHMaxJobSendBrick", &maxjobsend.PHMaxJobSendBrick{})
 
 	/*------------------------------------------------
@@ -118,7 +117,6 @@ func main() {
 	fac.RegisterModel("PHAuthGenerateToken", &authothers.PHAuthGenerateToken{})
 
 	r := bmrouter.BindRouter()
-	//http.ListenAndServe(":8081", r)
 
 	var once sync.Once
 	var bmRouter bmconfig.BMRouterConfig

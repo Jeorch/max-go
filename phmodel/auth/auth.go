@@ -7,11 +7,11 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-type PHAuth struct {
+type PhAuth struct {
 	Id  string        `json:"id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
-	Profile profile.PHProfile `json:"profile" jsonapi:"relationships"`
+	Profile profile.PhProfile `json:"Profile" jsonapi:"relationships"`
 
 	Token string `json:"token"`
 }
@@ -20,11 +20,11 @@ type PHAuth struct {
  * bm object interface
  *------------------------------------------------*/
 
-func (bd *PHAuth) ResetIdWithId_() {
+func (bd *PhAuth) ResetIdWithId_() {
 	bmmodel.ResetIdWithId_(bd)
 }
 
-func (bd *PHAuth) ResetId_WithID() {
+func (bd *PhAuth) ResetId_WithID() {
 	bmmodel.ResetId_WithID(bd)
 }
 
@@ -32,34 +32,34 @@ func (bd *PHAuth) ResetId_WithID() {
  * bmobject interface
  *------------------------------------------------*/
 
-func (bd *PHAuth) QueryObjectId() bson.ObjectId {
+func (bd *PhAuth) QueryObjectId() bson.ObjectId {
 	return bd.Id_
 }
 
-func (bd *PHAuth) QueryId() string {
+func (bd *PhAuth) QueryId() string {
 	return bd.Id
 }
 
-func (bd *PHAuth) SetObjectId(id_ bson.ObjectId) {
+func (bd *PhAuth) SetObjectId(id_ bson.ObjectId) {
 	bd.Id_ = id_
 }
 
-func (bd *PHAuth) SetId(id string) {
+func (bd *PhAuth) SetId(id string) {
 	bd.Id = id
 }
 
 /*------------------------------------------------
  * relationships interface
  *------------------------------------------------*/
-func (bd PHAuth) SetConnect(tag string, v interface{}) interface{} {
+func (bd PhAuth) SetConnect(tag string, v interface{}) interface{} {
 	switch tag {
-	case "profile":
-		bd.Profile = v.(profile.PHProfile)
+	case "Profile":
+		bd.Profile = v.(profile.PhProfile)
 	}
 	return bd
 }
 
-func (bd PHAuth) QueryConnect(tag string) interface{} {
+func (bd PhAuth) QueryConnect(tag string) interface{} {
 	switch tag {
 	case "profile":
 		return bd.Profile
@@ -71,14 +71,14 @@ func (bd PHAuth) QueryConnect(tag string) interface{} {
  * mongo interface
  *------------------------------------------------*/
 
-func (bd *PHAuth) InsertBMObject() error {
+func (bd *PhAuth) InsertBMObject() error {
 	return bmmodel.InsertBMObject(bd)
 }
 
-func (bd *PHAuth) FindOne(req request.Request) error {
+func (bd *PhAuth) FindOne(req request.Request) error {
 	return bmmodel.FindOne(req, bd)
 }
 
-func (bd *PHAuth) UpdateBMObject(req request.Request) error {
+func (bd *PhAuth) UpdateBMObject(req request.Request) error {
 	return bmmodel.UpdateOne(req, bd)
 }

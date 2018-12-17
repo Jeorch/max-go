@@ -20,7 +20,7 @@ type PHAuthProfilePush struct {
  *------------------------------------------------*/
 
 func (b *PHAuthProfilePush) Exec() error {
-	var tmp auth.PHAuth = b.bk.Pr.(auth.PHAuth)
+	var tmp auth.PhAuth = b.bk.Pr.(auth.PhAuth)
 	profile_tmp := tmp.Profile
 	if profile_tmp.Id != "" && profile_tmp.Id_.Valid() {
 		if profile_tmp.Valid() && profile_tmp.IsUserRegisted() {
@@ -34,7 +34,7 @@ func (b *PHAuthProfilePush) Exec() error {
 }
 
 func (b *PHAuthProfilePush) Prepare(pr interface{}) error {
-	req := pr.(auth.PHAuth)
+	req := pr.(auth.PhAuth)
 	//b.bk.Pr = req
 	b.BrickInstance().Pr = req
 	return nil
@@ -57,7 +57,7 @@ func (b *PHAuthProfilePush) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHAuthProfilePush) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(auth.PHAuth)
+	tmp := pr.(auth.PhAuth)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -67,7 +67,7 @@ func (b *PHAuthProfilePush) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval auth.PHAuth = b.BrickInstance().Pr.(auth.PHAuth)
+		var reval auth.PhAuth = b.BrickInstance().Pr.(auth.PhAuth)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }

@@ -1,4 +1,5 @@
 {
   "Host":"localhost",
-  "Port":"8081"
+  "Port":"9001",
+  "TmpDir": "tmp"
 }

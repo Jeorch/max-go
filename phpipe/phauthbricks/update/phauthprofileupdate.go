@@ -23,7 +23,7 @@ type PHAuthProfileUpdateBrick struct {
  *------------------------------------------------*/
 
 func (b *PHAuthProfileUpdateBrick) Exec() error {
-	tmp := profile.PHProfile{}
+	tmp := profile.PhProfile{}
 	tmp.UpdateBMObject(*b.bk.Req)
 	b.bk.Pr = tmp
 	return nil
@@ -53,7 +53,7 @@ func (b *PHAuthProfileUpdateBrick) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHAuthProfileUpdateBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(profile.PHProfile)
+	tmp := pr.(profile.PhProfile)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -63,7 +63,7 @@ func (b *PHAuthProfileUpdateBrick) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval profile.PHProfile = b.BrickInstance().Pr.(profile.PHProfile)
+		var reval profile.PhProfile = b.BrickInstance().Pr.(profile.PhProfile)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }

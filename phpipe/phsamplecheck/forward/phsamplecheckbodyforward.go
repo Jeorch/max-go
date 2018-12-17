@@ -29,7 +29,8 @@ func (b *PHSampleCheckBodyForwardBrick) Prepare(pr interface{}) error {
 }
 
 func (b *PHSampleCheckBodyForwardBrick) Done(pkg string, idx int64, e error) error {
-	host := "192.168.100.174"
+	//TODO：forward配置化
+	host := "max-client"
 	port := "9000"
 	bmrouter.ForWardNextBrick(host, port, pkg, idx, b)
 	return nil

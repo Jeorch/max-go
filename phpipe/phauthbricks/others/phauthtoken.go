@@ -25,7 +25,7 @@ type PHAuthGenerateToken struct {
 func (b *PHAuthGenerateToken) Exec() error {
 
 	tmp := b.BrickInstance().Pr
-	bmah := tmp.(auth.PHAuth)
+	bmah := tmp.(auth.PhAuth)
 	h := md5.New()
 	io.WriteString(h, bmah.Id)
 
@@ -40,7 +40,7 @@ func (b *PHAuthGenerateToken) Exec() error {
 }
 
 func (b *PHAuthGenerateToken) Prepare(pr interface{}) error {
-	req := pr.(auth.PHAuth)
+	req := pr.(auth.PhAuth)
 	b.BrickInstance().Pr = req
 	return nil
 }
@@ -62,7 +62,7 @@ func (b *PHAuthGenerateToken) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHAuthGenerateToken) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(auth.PHAuth)
+	tmp := pr.(auth.PhAuth)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -72,7 +72,7 @@ func (b *PHAuthGenerateToken) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval auth.PHAuth = b.BrickInstance().Pr.(auth.PHAuth)
+		var reval auth.PhAuth = b.BrickInstance().Pr.(auth.PhAuth)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }

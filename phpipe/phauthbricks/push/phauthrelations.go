@@ -23,18 +23,18 @@ type PHAuthRSPushBrick struct {
  *------------------------------------------------*/
 
 func (b *PHAuthRSPushBrick) Exec() error {
-	var tmp auth.PHAuth = b.bk.Pr.(auth.PHAuth)
-	eq := request.EQCond{}
+	var tmp auth.PhAuth = b.bk.Pr.(auth.PhAuth)
+	eq := request.Eqcond{}
 	eq.Ky = "auth_id"
 	eq.Vy = tmp.Id
 	req := request.Request{}
-	req.Res = "PHAuthProp"
+	req.Res = "PhAuthProp"
 	var condi []interface{}
 	condi = append(condi, eq)
-	c := req.SetConnect("eqcond", condi)
+	c := req.SetConnect("Eqcond", condi)
 	fmt.Println(c)
 
-	var qr auth.PHAuthProp
+	var qr auth.PhAuthProp
 	err := qr.FindOne(c.(request.Request))
 	if err != nil && err.Error() == "not found" {
 		//panic(err)
@@ -49,7 +49,7 @@ func (b *PHAuthRSPushBrick) Exec() error {
 }
 
 func (b *PHAuthRSPushBrick) Prepare(pr interface{}) error {
-	req := pr.(auth.PHAuth)
+	req := pr.(auth.PhAuth)
 	//b.bk.Pr = req
 	b.BrickInstance().Pr = req
 	return nil
@@ -72,7 +72,7 @@ func (b *PHAuthRSPushBrick) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHAuthRSPushBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(auth.PHAuth)
+	tmp := pr.(auth.PhAuth)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -82,7 +82,7 @@ func (b *PHAuthRSPushBrick) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval auth.PHAuth = b.BrickInstance().Pr.(auth.PHAuth)
+		var reval auth.PhAuth = b.BrickInstance().Pr.(auth.PhAuth)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }

@@ -20,14 +20,14 @@ type PHAuthPushBrick struct {
  *------------------------------------------------*/
 
 func (b *PHAuthPushBrick) Exec() error {
-	var tmp auth.PHAuth = b.bk.Pr.(auth.PHAuth)
+	var tmp auth.PhAuth = b.bk.Pr.(auth.PhAuth)
 	tmp.InsertBMObject()
 	b.bk.Pr = tmp
 	return nil
 }
 
 func (b *PHAuthPushBrick) Prepare(pr interface{}) error {
-	req := pr.(auth.PHAuth)
+	req := pr.(auth.PhAuth)
 	b.BrickInstance().Pr = req
 	return nil
 }
@@ -49,7 +49,7 @@ func (b *PHAuthPushBrick) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHAuthPushBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(auth.PHAuth)
+	tmp := pr.(auth.PhAuth)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -59,7 +59,7 @@ func (b *PHAuthPushBrick) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval auth.PHAuth = b.BrickInstance().Pr.(auth.PHAuth)
+		var reval auth.PhAuth = b.BrickInstance().Pr.(auth.PhAuth)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }

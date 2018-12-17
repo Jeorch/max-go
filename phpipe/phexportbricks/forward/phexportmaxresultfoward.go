@@ -29,8 +29,10 @@ func (b *PHExportMaxResultForwardBrick) Prepare(pr interface{}) error {
 }
 
 func (b *PHExportMaxResultForwardBrick) Done(pkg string, idx int64, e error) error {
-	host := "192.168.100.174"
-	port := "9000"
+	//TODO：forward配置化 export
+	host := "192.168.100.176"
+	//host := "max-client"
+	port := "9001"
 	bmrouter.ForWardNextBrick(host, port, pkg, idx, b)
 	return nil
 }

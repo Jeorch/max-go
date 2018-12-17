@@ -25,7 +25,7 @@ type PHAuthProp2AuthBrick struct {
  *------------------------------------------------*/
 
 func (b *PHAuthProp2AuthBrick) Exec() error {
-	prop := b.bk.Pr.(auth.PHAuthProp)
+	prop := b.bk.Pr.(auth.PhAuthProp)
 	reval, err := findAuth(prop)
 	profile, err := findProfile(prop)
 	profileProp, err := findProfileProp(profile)
@@ -37,7 +37,7 @@ func (b *PHAuthProp2AuthBrick) Exec() error {
 }
 
 func (b *PHAuthProp2AuthBrick) Prepare(pr interface{}) error {
-	req := pr.(auth.PHAuthProp)
+	req := pr.(auth.PhAuthProp)
 	b.BrickInstance().Pr = req
 	return nil
 }
@@ -59,7 +59,7 @@ func (b *PHAuthProp2AuthBrick) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHAuthProp2AuthBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(auth.PHAuth)
+	tmp := pr.(auth.PhAuth)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -69,7 +69,7 @@ func (b *PHAuthProp2AuthBrick) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval auth.PHAuth = b.BrickInstance().Pr.(auth.PHAuth)
+		var reval auth.PhAuth = b.BrickInstance().Pr.(auth.PhAuth)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }
@@ -78,71 +78,71 @@ func (b *PHAuthProp2AuthBrick) Return(w http.ResponseWriter) {
  * brick inner function
  *------------------------------------------------*/
 
-func findAuth(prop auth.PHAuthProp) (auth.PHAuth, error) {
-	eq := request.EQCond{}
+func findAuth(prop auth.PhAuthProp) (auth.PhAuth, error) {
+	eq := request.Eqcond{}
 	eq.Ky = "_id"
 	eq.Vy = bson.ObjectIdHex(prop.AuthID)
 	req := request.Request{}
-	req.Res = "PHAuth"
+	req.Res = "PhAuth"
 	var condi []interface{}
 	condi = append(condi, eq)
-	c := req.SetConnect("eqcond", condi)
+	c := req.SetConnect("Eqcond", condi)
 	fmt.Println(c)
 
-	reval := auth.PHAuth{}
+	reval := auth.PhAuth{}
 	err := reval.FindOne(c.(request.Request))
 
 	return reval, err
 
 }
 
-func findProfile(prop auth.PHAuthProp) (profile.PHProfile, error) {
-	eq := request.EQCond{}
+func findProfile(prop auth.PhAuthProp) (profile.PhProfile, error) {
+	eq := request.Eqcond{}
 	eq.Ky = "_id"
 	eq.Vy = bson.ObjectIdHex(prop.ProfileID)
 	req := request.Request{}
-	req.Res = "PHProfile"
+	req.Res = "PhProfile"
 	var condi []interface{}
 	condi = append(condi, eq)
-	c := req.SetConnect("eqcond", condi)
+	c := req.SetConnect("Eqcond", condi)
 	fmt.Println(c)
 
-	reval := profile.PHProfile{}
+	reval := profile.PhProfile{}
 	err := reval.FindOne(c.(request.Request))
 	reval.Password = ""
 
 	return reval, err
 }
 
-func findProfileProp(phProfile profile.PHProfile) (profile.PHProfileProp, error) {
-	eq := request.EQCond{}
+func findProfileProp(phProfile profile.PhProfile) (profile.PhProfileProp, error) {
+	eq := request.Eqcond{}
 	eq.Ky = "profile_id"
 	eq.Vy = phProfile.Id
 	req := request.Request{}
-	req.Res = "PHProfileProp"
+	req.Res = "PhProfileProp"
 	var condi []interface{}
 	condi = append(condi, eq)
-	c := req.SetConnect("eqcond", condi)
+	c := req.SetConnect("Eqcond", condi)
 	fmt.Println(c)
 
-	reval := profile.PHProfileProp{}
+	reval := profile.PhProfileProp{}
 	err := reval.FindOne(c.(request.Request))
 
 	return reval, err
 }
 
-func findProfileCompany(prop profile.PHProfileProp) (company.PHCompany, error) {
-	eq := request.EQCond{}
+func findProfileCompany(prop profile.PhProfileProp) (company.PhCompany, error) {
+	eq := request.Eqcond{}
 	eq.Ky = "_id"
 	eq.Vy = bson.ObjectIdHex(prop.CompanyID)
 	req := request.Request{}
-	req.Res = "PHCompany"
+	req.Res = "PhCompany"
 	var condi []interface{}
 	condi = append(condi, eq)
-	c := req.SetConnect("eqcond", condi)
+	c := req.SetConnect("Eqcond", condi)
 	fmt.Println(c)
 
-	reval := company.PHCompany{}
+	reval := company.PhCompany{}
 	err := reval.FindOne(c.(request.Request))
 
 	return reval, err

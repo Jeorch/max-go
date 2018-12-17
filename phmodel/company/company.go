@@ -1,28 +1,30 @@
 package company
 
 import (
+	"github.com/alfredyang1986/blackmirror/bmconfighandle"
 	"github.com/alfredyang1986/blackmirror/bmmodel"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
-type PHCompany struct {
+type PhCompany struct {
 	Id  string        `json:"id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
-	CompanyName string `json:"companyname" bson:"company_name"`
+	CompanyName  string  `json:"companyname" bson:"company_name"`
+	//StartProcess float64 `json:"startprocess" bson:"startprocess"`
 }
 
 /*------------------------------------------------
  * bm object interface
  *------------------------------------------------*/
 
-func (bd *PHCompany) ResetIdWithId_() {
+func (bd *PhCompany) ResetIdWithId_() {
 	bmmodel.ResetIdWithId_(bd)
 }
 
-func (bd *PHCompany) ResetId_WithID() {
+func (bd *PhCompany) ResetId_WithID() {
 	bmmodel.ResetId_WithID(bd)
 }
 
@@ -30,30 +32,30 @@ func (bd *PHCompany) ResetId_WithID() {
  * bmobject interface
  *------------------------------------------------*/
 
-func (bd *PHCompany) QueryObjectId() bson.ObjectId {
+func (bd *PhCompany) QueryObjectId() bson.ObjectId {
 	return bd.Id_
 }
 
-func (bd *PHCompany) QueryId() string {
+func (bd *PhCompany) QueryId() string {
 	return bd.Id
 }
 
-func (bd *PHCompany) SetObjectId(id_ bson.ObjectId) {
+func (bd *PhCompany) SetObjectId(id_ bson.ObjectId) {
 	bd.Id_ = id_
 }
 
-func (bd *PHCompany) SetId(id string) {
+func (bd *PhCompany) SetId(id string) {
 	bd.Id = id
 }
 
 /*------------------------------------------------
  * relationships interface
  *------------------------------------------------*/
-func (bd PHCompany) SetConnect(tag string, v interface{}) interface{} {
+func (bd PhCompany) SetConnect(tag string, v interface{}) interface{} {
 	return bd
 }
 
-func (bd PHCompany) QueryConnect(tag string) interface{} {
+func (bd PhCompany) QueryConnect(tag string) interface{} {
 	return bd
 }
 
@@ -61,15 +63,15 @@ func (bd PHCompany) QueryConnect(tag string) interface{} {
  * mongo interface
  *------------------------------------------------*/
 
-func (bd *PHCompany) InsertBMObject() error {
+func (bd *PhCompany) InsertBMObject() error {
 	return bmmodel.InsertBMObject(bd)
 }
 
-func (bd *PHCompany) FindOne(req request.Request) error {
+func (bd *PhCompany) FindOne(req request.Request) error {
 	return bmmodel.FindOne(req, bd)
 }
 
-func (bd *PHCompany) UpdateBMObject(req request.Request) error {
+func (bd *PhCompany) UpdateBMObject(req request.Request) error {
 	return bmmodel.UpdateOne(req, bd)
 }
 
@@ -77,14 +79,16 @@ func (bd *PHCompany) UpdateBMObject(req request.Request) error {
  * profile interface
  *------------------------------------------------*/
 
-func (bd PHCompany) IsCompanyRegisted() bool {
-	session, err := mgo.Dial("localhost:27017")
+func (bd PhCompany) IsCompanyRegisted() bool {
+	var bmMongoConfig bmconfig.BMMongoConfig
+	bmMongoConfig.GenerateConfig()
+	session, err := mgo.Dial(bmMongoConfig.Host + ":" + bmMongoConfig.Port)
 	if err != nil {
-		panic("dial db error")
+		return true
 	}
 	defer session.Close()
 
-	c := session.DB("test").C("PHCompany")
+	c := session.DB("test").C("PhCompany")
 	n, err := c.Find(bson.M{"company_name": bd.CompanyName}).Count()
 	if err != nil {
 		panic(err)
@@ -93,6 +97,6 @@ func (bd PHCompany) IsCompanyRegisted() bool {
 	return n > 0
 }
 
-func (bd PHCompany) Valid() bool {
+func (bd PhCompany) Valid() bool {
 	return bd.CompanyName != ""
 }
