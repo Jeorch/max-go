@@ -174,7 +174,7 @@ func cpa2csv(cpaFile string) (string, string, error) {
 	var notArrivalHosp string
 	var bmRouter bmconfig.BMRouterConfig
 	bmRouter.GenerateConfig()
-	localCpa := bmRouter.TmpDir + cpaFile
+	localCpa := bmRouter.TmpDir + "/" + cpaFile
 	cpa, err = bmexcelhandle.GenerateCSVFromXLSXFile(localCpa, 0)
 	notArrivalHosp, err = bmexcelhandle.GenerateCSVFromXLSXFile(localCpa, 1)
 	os.Remove(localCpa)
@@ -186,7 +186,7 @@ func gyc2csv(gycFile string) (string, error) {
 	var gyc string
 	var bmRouter bmconfig.BMRouterConfig
 	bmRouter.GenerateConfig()
-	localGyc := bmRouter.TmpDir + gycFile
+	localGyc := bmRouter.TmpDir + "/" + gycFile
 	gyc, err = bmexcelhandle.GenerateCSVFromXLSXFile(localGyc, 0)
 	os.Remove(localGyc)
 	return gyc, err

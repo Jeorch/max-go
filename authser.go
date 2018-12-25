@@ -7,9 +7,13 @@ import (
 	"github.com/Jeorch/max-go/phmodel/profile"
 	"github.com/Jeorch/max-go/phmodel/resultcheck"
 	"github.com/Jeorch/max-go/phmodel/samplecheck"
+	"github.com/Jeorch/max-go/phmodel/xmpp"
 	"github.com/Jeorch/max-go/phpipe/phauthbricks/others"
 	"github.com/Jeorch/max-go/phpipe/phcompanybricks/push"
 	"github.com/Jeorch/max-go/phpipe/phexportbricks/forward"
+	"github.com/Jeorch/max-go/phpipe/phmaxactionbricks/find"
+	"github.com/Jeorch/max-go/phpipe/phmaxactionbricks/generate"
+	"github.com/Jeorch/max-go/phpipe/phmaxactionbricks/send"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/delete"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/generate"
 	"github.com/Jeorch/max-go/phpipe/phmaxjobbricks/push"
@@ -51,6 +55,11 @@ func main() {
 	fac.RegisterModel("PhProfileProp", &profile.PhProfileProp{})
 
 	fac.RegisterModel("Phmaxjob", &max.Phmaxjob{})
+	fac.RegisterModel("PhAction", &max.PhAction{})
+	fac.RegisterModel("PhCalcYmConf", &max.PhCalcYmConf{})
+	fac.RegisterModel("PhPanelConf", &max.PhPanelConf{})
+	fac.RegisterModel("PhCalcConf", &max.PhCalcConf{})
+	fac.RegisterModel("PhXmppConf", &xmpp.PhXmppConf{})
 
 	fac.RegisterModel("SampleCheckSelecter", &samplecheck.SampleCheckSelecter{})
 	fac.RegisterModel("SampleCheckBody", &samplecheck.SampleCheckBody{})
@@ -96,6 +105,19 @@ func main() {
 	fac.RegisterModel("PHMaxJobSendBrick", &maxjobsend.PHMaxJobSendBrick{})
 
 	/*------------------------------------------------
+	 * max action bricks object
+	 *------------------------------------------------*/
+	fac.RegisterModel("PhMaxActionGenerateBrick", &maxactiongenerate.PhMaxActionGenerateBrick{})
+	fac.RegisterModel("PhMaxActionCalcYmBrick", &maxactionfind.PhMaxActionCalcYmBrick{})
+	fac.RegisterModel("PhMaxActionPanelBrick", &maxactionfind.PhMaxActionPanelBrick{})
+	fac.RegisterModel("PhMaxActionCalcBrick", &maxactionfind.PhMaxActionCalcBrick{})
+
+	//fac.RegisterModel("PhMaxActionPushBrick", &maxactionpush.PhMaxActionPushBrick{})
+	//fac.RegisterModel("PhMaxActionPushPanelBrick", &maxactionpush.PhMaxActionPushPanelBrick{})
+
+	fac.RegisterModel("PhMaxActionSendBrick", &maxactionsend.PhMaxActionSendBrick{})
+
+	/*------------------------------------------------
 	 * sample check bricks object
 	 *------------------------------------------------*/
 	fac.RegisterModel("PHSampleCheckSelecterForwardBrick", &samplecheckforward.PHSampleCheckSelecterForwardBrick{})
@@ -122,5 +144,5 @@ func main() {
 	var bmRouter bmconfig.BMRouterConfig
 	once.Do(bmRouter.GenerateConfig)
 
-	http.ListenAndServe(":" + bmRouter.Port, r)
+	http.ListenAndServe(":"+bmRouter.Port, r)
 }
