@@ -2,30 +2,31 @@ package profile
 
 import (
 	"github.com/Jeorch/max-go/phmodel/company"
+	"github.com/alfredyang1986/blackmirror/bmconfighandle"
 	"github.com/alfredyang1986/blackmirror/bmmodel"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
-type PHProfile struct {
+type PhProfile struct {
 	Id  string        `json:"id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
 	Username string            `json:"username" bson:"username"`
 	Password string            `json:"password" bson:"password"`
-	Company  company.PHCompany `json:"company" jsonapi:"relationships"`
+	Company  company.PhCompany `json:"Company" jsonapi:"relationships"`
 }
 
 /*------------------------------------------------
  * bm object interface
  *------------------------------------------------*/
 
-func (bd *PHProfile) ResetIdWithId_() {
+func (bd *PhProfile) ResetIdWithId_() {
 	bmmodel.ResetIdWithId_(bd)
 }
 
-func (bd *PHProfile) ResetId_WithID() {
+func (bd *PhProfile) ResetId_WithID() {
 	bmmodel.ResetId_WithID(bd)
 }
 
@@ -33,36 +34,36 @@ func (bd *PHProfile) ResetId_WithID() {
  * bmobject interface
  *------------------------------------------------*/
 
-func (bd *PHProfile) QueryObjectId() bson.ObjectId {
+func (bd *PhProfile) QueryObjectId() bson.ObjectId {
 	return bd.Id_
 }
 
-func (bd *PHProfile) QueryId() string {
+func (bd *PhProfile) QueryId() string {
 	return bd.Id
 }
 
-func (bd *PHProfile) SetObjectId(id_ bson.ObjectId) {
+func (bd *PhProfile) SetObjectId(id_ bson.ObjectId) {
 	bd.Id_ = id_
 }
 
-func (bd *PHProfile) SetId(id string) {
+func (bd *PhProfile) SetId(id string) {
 	bd.Id = id
 }
 
 /*------------------------------------------------
  * relationships interface
  *------------------------------------------------*/
-func (bd PHProfile) SetConnect(tag string, v interface{}) interface{} {
+func (bd PhProfile) SetConnect(tag string, v interface{}) interface{} {
 	switch tag {
-	case "company":
-		bd.Company = v.(company.PHCompany)
+	case "Company":
+		bd.Company = v.(company.PhCompany)
 	}
 	return bd
 }
 
-func (bd PHProfile) QueryConnect(tag string) interface{} {
+func (bd PhProfile) QueryConnect(tag string) interface{} {
 	switch tag {
-	case "company":
+	case "Company":
 		return bd.Company
 	}
 	return bd
@@ -72,15 +73,15 @@ func (bd PHProfile) QueryConnect(tag string) interface{} {
  * mongo interface
  *------------------------------------------------*/
 
-func (bd *PHProfile) InsertBMObject() error {
+func (bd *PhProfile) InsertBMObject() error {
 	return bmmodel.InsertBMObject(bd)
 }
 
-func (bd *PHProfile) FindOne(req request.Request) error {
+func (bd *PhProfile) FindOne(req request.Request) error {
 	return bmmodel.FindOne(req, bd)
 }
 
-func (bd *PHProfile) UpdateBMObject(req request.Request) error {
+func (bd *PhProfile) UpdateBMObject(req request.Request) error {
 	return bmmodel.UpdateOne(req, bd)
 }
 
@@ -88,14 +89,16 @@ func (bd *PHProfile) UpdateBMObject(req request.Request) error {
  * profile interface
  *------------------------------------------------*/
 
-func (bd PHProfile) IsUserRegisted() bool {
-	session, err := mgo.Dial("localhost:27017")
+func (bd PhProfile) IsUserRegisted() bool {
+	var bmMongoConfig bmconfig.BMMongoConfig
+	bmMongoConfig.GenerateConfig()
+	session, err := mgo.Dial(bmMongoConfig.Host + ":" + bmMongoConfig.Port)
 	if err != nil {
-		panic("dial db error")
+		return true
 	}
 	defer session.Close()
 
-	c := session.DB("test").C("PHProfile")
+	c := session.DB("test").C("PhProfile")
 	n, err := c.Find(bson.M{"username": bd.Username}).Count()
 	if err != nil {
 		panic(err)
@@ -104,6 +107,6 @@ func (bd PHProfile) IsUserRegisted() bool {
 	return n > 0
 }
 
-func (bd PHProfile) Valid() bool {
+func (bd PhProfile) Valid() bool {
 	return bd.Username != ""
 }

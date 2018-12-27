@@ -23,25 +23,25 @@ type PHProfile2AuthProp struct {
  *------------------------------------------------*/
 
 func (b *PHProfile2AuthProp) Exec() error {
-	var tmp profile.PHProfile = b.bk.Pr.(profile.PHProfile)
-	eq := request.EQCond{}
+	var tmp profile.PhProfile = b.bk.Pr.(profile.PhProfile)
+	eq := request.Eqcond{}
 	eq.Ky = "profile_id"
 	eq.Vy = tmp.Id
 	req := request.Request{}
-	req.Res = "PHAuthProp"
+	req.Res = "PhAuthProp"
 	var condi []interface{}
 	condi = append(condi, eq)
-	c := req.SetConnect("eqcond", condi)
+	c := req.SetConnect("Eqcond", condi)
 	fmt.Println(c)
 
-	var reval auth.PHAuthProp
+	var reval auth.PhAuthProp
 	err := reval.FindOne(c.(request.Request))
 	b.bk.Pr = reval
 	return err
 }
 
 func (b *PHProfile2AuthProp) Prepare(pr interface{}) error {
-	req := pr.(profile.PHProfile)
+	req := pr.(profile.PhProfile)
 	b.BrickInstance().Pr = req
 	//b.bk.Pr = req
 	return nil
@@ -64,7 +64,7 @@ func (b *PHProfile2AuthProp) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHProfile2AuthProp) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(auth.PHAuthProp)
+	tmp := pr.(auth.PhAuthProp)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -74,7 +74,7 @@ func (b *PHProfile2AuthProp) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval auth.PHAuth = b.BrickInstance().Pr.(auth.PHAuth)
+		var reval auth.PhAuth = b.BrickInstance().Pr.(auth.PhAuth)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }

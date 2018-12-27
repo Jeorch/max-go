@@ -6,7 +6,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-type PHAuthProp struct {
+type PhAuthProp struct {
 	Id  string        `json:"Id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
@@ -18,11 +18,11 @@ type PHAuthProp struct {
  * bm object interface
  *------------------------------------------------*/
 
-func (bd *PHAuthProp) ResetIdWithId_() {
+func (bd *PhAuthProp) ResetIdWithId_() {
 	bmmodel.ResetIdWithId_(bd)
 }
 
-func (bd *PHAuthProp) ResetId_WithID() {
+func (bd *PhAuthProp) ResetId_WithID() {
 	bmmodel.ResetId_WithID(bd)
 }
 
@@ -30,30 +30,30 @@ func (bd *PHAuthProp) ResetId_WithID() {
  * bmobject interface
  *------------------------------------------------*/
 
-func (bd *PHAuthProp) QueryObjectId() bson.ObjectId {
+func (bd *PhAuthProp) QueryObjectId() bson.ObjectId {
 	return bd.Id_
 }
 
-func (bd *PHAuthProp) QueryId() string {
+func (bd *PhAuthProp) QueryId() string {
 	return bd.Id
 }
 
-func (bd *PHAuthProp) SetObjectId(id_ bson.ObjectId) {
+func (bd *PhAuthProp) SetObjectId(id_ bson.ObjectId) {
 	bd.Id_ = id_
 }
 
-func (bd *PHAuthProp) SetId(id string) {
+func (bd *PhAuthProp) SetId(id string) {
 	bd.Id = id
 }
 
 /*------------------------------------------------
  * relationships interface
  *------------------------------------------------*/
-func (bd PHAuthProp) SetConnect(tag string, v interface{}) interface{} {
+func (bd PhAuthProp) SetConnect(tag string, v interface{}) interface{} {
 	return bd
 }
 
-func (bd PHAuthProp) QueryConnect(tag string) interface{} {
+func (bd PhAuthProp) QueryConnect(tag string) interface{} {
 	return bd
 }
 
@@ -61,14 +61,14 @@ func (bd PHAuthProp) QueryConnect(tag string) interface{} {
  * mongo interface
  *------------------------------------------------*/
 
-func (bd *PHAuthProp) InsertBMObject() error {
+func (bd *PhAuthProp) InsertBMObject() error {
 	return bmmodel.InsertBMObject(bd)
 }
 
-func (bd *PHAuthProp) FindOne(req request.Request) error {
+func (bd *PhAuthProp) FindOne(req request.Request) error {
 	return bmmodel.FindOne(req, bd)
 }
 
-func (bd *PHAuthProp) UpdateBMObject(req request.Request) error {
+func (bd *PhAuthProp) UpdateBMObject(req request.Request) error {
 	return bmmodel.UpdateOne(req, bd)
 }

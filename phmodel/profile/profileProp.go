@@ -6,7 +6,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-type PHProfileProp struct {
+type PhProfileProp struct {
 	Id  string        `json:"id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
@@ -18,11 +18,11 @@ type PHProfileProp struct {
  * bm object interface
  *------------------------------------------------*/
 
-func (bd *PHProfileProp) ResetIdWithId_() {
+func (bd *PhProfileProp) ResetIdWithId_() {
 	bmmodel.ResetIdWithId_(bd)
 }
 
-func (bd *PHProfileProp) ResetId_WithID() {
+func (bd *PhProfileProp) ResetId_WithID() {
 	bmmodel.ResetId_WithID(bd)
 }
 
@@ -30,30 +30,30 @@ func (bd *PHProfileProp) ResetId_WithID() {
  * bmobject interface
  *------------------------------------------------*/
 
-func (bd *PHProfileProp) QueryObjectId() bson.ObjectId {
+func (bd *PhProfileProp) QueryObjectId() bson.ObjectId {
 	return bd.Id_
 }
 
-func (bd *PHProfileProp) QueryId() string {
+func (bd *PhProfileProp) QueryId() string {
 	return bd.Id
 }
 
-func (bd *PHProfileProp) SetObjectId(id_ bson.ObjectId) {
+func (bd *PhProfileProp) SetObjectId(id_ bson.ObjectId) {
 	bd.Id_ = id_
 }
 
-func (bd *PHProfileProp) SetId(id string) {
+func (bd *PhProfileProp) SetId(id string) {
 	bd.Id = id
 }
 
 /*------------------------------------------------
  * relationships interface
  *------------------------------------------------*/
-func (bd PHProfileProp) SetConnect(tag string, v interface{}) interface{} {
+func (bd PhProfileProp) SetConnect(tag string, v interface{}) interface{} {
 	return bd
 }
 
-func (bd PHProfileProp) QueryConnect(tag string) interface{} {
+func (bd PhProfileProp) QueryConnect(tag string) interface{} {
 	return bd
 }
 
@@ -61,14 +61,14 @@ func (bd PHProfileProp) QueryConnect(tag string) interface{} {
  * mongo interface
  *------------------------------------------------*/
 
-func (bd *PHProfileProp) InsertBMObject() error {
+func (bd *PhProfileProp) InsertBMObject() error {
 	return bmmodel.InsertBMObject(bd)
 }
 
-func (bd *PHProfileProp) FindOne(req request.Request) error {
+func (bd *PhProfileProp) FindOne(req request.Request) error {
 	return bmmodel.FindOne(req, bd)
 }
 
-func (bd *PHProfileProp) UpdateBMObject(req request.Request) error {
+func (bd *PhProfileProp) UpdateBMObject(req request.Request) error {
 	return bmmodel.UpdateOne(req, bd)
 }

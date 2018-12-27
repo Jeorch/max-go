@@ -2,18 +2,19 @@ package max
 
 import (
 	"fmt"
+	"github.com/alfredyang1986/blackmirror/bmconfighandle"
 	"github.com/alfredyang1986/blackmirror/bmexcelhandle"
 	"github.com/alfredyang1986/blackmirror/bmmodel"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"
+	"github.com/alfredyang1986/blackmirror/bmredis"
 	"github.com/colinmarc/hdfs"
-	"github.com/go-redis/redis"
 	"github.com/hashicorp/go-uuid"
 	"gopkg.in/mgo.v2/bson"
 	"os"
 	"time"
 )
 
-type PHMaxJob struct {
+type Phmaxjob struct {
 	Id  string        `json:"id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
@@ -22,7 +23,9 @@ type PHMaxJob struct {
 	JobID              string `json:"job_id" bson:"job_id"`
 	Date               string `json:"date" bson:"date"`
 	Call               string `json:"call" bson:"call"`
-	Percentage         int 	  `json:"percentage" bson:"percentage"`
+	Panel              string `json:"panel" bson:"panel"`
+	PanelMkt           string `json:"panel_mkt" bson:"panel_mkt"`
+	Percentage         int    `json:"percentage" bson:"percentage"`
 	Message            string `json:"message" bson:"message"`
 	Cpa                string `json:"cpa" bson:"cpa"`
 	Gycx               string `json:"gycx" bson:"gycx"`
@@ -35,11 +38,11 @@ type PHMaxJob struct {
  * bm object interface
  *------------------------------------------------*/
 
-func (bd *PHMaxJob) ResetIdWithId_() {
+func (bd *Phmaxjob) ResetIdWithId_() {
 	bmmodel.ResetIdWithId_(bd)
 }
 
-func (bd *PHMaxJob) ResetId_WithID() {
+func (bd *Phmaxjob) ResetId_WithID() {
 	bmmodel.ResetId_WithID(bd)
 }
 
@@ -47,30 +50,30 @@ func (bd *PHMaxJob) ResetId_WithID() {
  * bmobject interface
  *------------------------------------------------*/
 
-func (bd *PHMaxJob) QueryObjectId() bson.ObjectId {
+func (bd *Phmaxjob) QueryObjectId() bson.ObjectId {
 	return bd.Id_
 }
 
-func (bd *PHMaxJob) QueryId() string {
+func (bd *Phmaxjob) QueryId() string {
 	return bd.Id
 }
 
-func (bd *PHMaxJob) SetObjectId(id_ bson.ObjectId) {
+func (bd *Phmaxjob) SetObjectId(id_ bson.ObjectId) {
 	bd.Id_ = id_
 }
 
-func (bd *PHMaxJob) SetId(id string) {
+func (bd *Phmaxjob) SetId(id string) {
 	bd.Id = id
 }
 
 /*------------------------------------------------
  * relationships interface
  *------------------------------------------------*/
-func (bd PHMaxJob) SetConnect(tag string, v interface{}) interface{} {
+func (bd Phmaxjob) SetConnect(tag string, v interface{}) interface{} {
 	return bd
 }
 
-func (bd PHMaxJob) QueryConnect(tag string) interface{} {
+func (bd Phmaxjob) QueryConnect(tag string) interface{} {
 	return bd
 }
 
@@ -78,19 +81,19 @@ func (bd PHMaxJob) QueryConnect(tag string) interface{} {
  * mongo interface
  *------------------------------------------------*/
 
-func (bd *PHMaxJob) InsertBMObject() error {
+func (bd *Phmaxjob) InsertBMObject() error {
 	return bmmodel.InsertBMObject(bd)
 }
 
-func (bd *PHMaxJob) FindOne(req request.Request) error {
+func (bd *Phmaxjob) FindOne(req request.Request) error {
 	return bmmodel.FindOne(req, bd)
 }
 
-func (bd *PHMaxJob) UpdateBMObject(req request.Request) error {
+func (bd *Phmaxjob) UpdateBMObject(req request.Request) error {
 	return bmmodel.UpdateOne(req, bd)
 }
 
-func (bd *PHMaxJob) CheckJobIdCall() error {
+func (bd *Phmaxjob) CheckJobIdCall() error {
 
 	//var err error
 
@@ -98,11 +101,7 @@ func (bd *PHMaxJob) CheckJobIdCall() error {
 	var notArrivalHospDesName string
 	var gycDesName string
 
-	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
+	client := bmredis.GetRedisClient()
 	defer client.Close()
 
 	jobID := bd.JobID
@@ -141,7 +140,7 @@ func (bd *PHMaxJob) CheckJobIdCall() error {
 		_, err = client.HSet(jobCall, "not_arrival_hosp_file", bd.NotArrivalHospFile).Result()
 		_, err = client.HSet(jobCall, "gycx", bd.Gycx).Result()
 
-		client.Expire(jobCall, 60 * time.Second)
+		client.Expire(jobCall, 60*time.Second)
 	}
 	bd.Id = bd.JobID
 	bd.Date = time.Now().String()
@@ -173,7 +172,9 @@ func cpa2csv(cpaFile string) (string, string, error) {
 	var err error
 	var cpa string
 	var notArrivalHosp string
-	localCpa := "resource/" + cpaFile
+	var bmRouter bmconfig.BMRouterConfig
+	bmRouter.GenerateConfig()
+	localCpa := bmRouter.TmpDir + "/" + cpaFile
 	cpa, err = bmexcelhandle.GenerateCSVFromXLSXFile(localCpa, 0)
 	notArrivalHosp, err = bmexcelhandle.GenerateCSVFromXLSXFile(localCpa, 1)
 	os.Remove(localCpa)
@@ -183,7 +184,9 @@ func cpa2csv(cpaFile string) (string, string, error) {
 func gyc2csv(gycFile string) (string, error) {
 	var err error
 	var gyc string
-	localGyc := "resource/" + gycFile
+	var bmRouter bmconfig.BMRouterConfig
+	bmRouter.GenerateConfig()
+	localGyc := bmRouter.TmpDir + "/" + gycFile
 	gyc, err = bmexcelhandle.GenerateCSVFromXLSXFile(localGyc, 0)
 	os.Remove(localGyc)
 	return gyc, err
@@ -193,6 +196,7 @@ func push2hdfs(localFile string) (string, error) {
 	localDir := localFile
 	fileDesName, _ := uuid.GenerateUUID()
 	fmt.Println(fileDesName)
+	//TODO:hdfs 配置化
 	fileDesPath := "/workData/Client/" + fileDesName
 	client, _ := hdfs.New("192.168.100.137:9000")
 	err := client.CopyToRemote(localDir, fileDesPath)

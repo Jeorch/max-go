@@ -20,7 +20,7 @@ type PHAuthCompanyPush struct {
  *------------------------------------------------*/
 
 func (b *PHAuthCompanyPush) Exec() error {
-	var tmp auth.PHAuth = b.bk.Pr.(auth.PHAuth)
+	var tmp auth.PhAuth = b.bk.Pr.(auth.PhAuth)
 	profile_tmp := tmp.Profile
 	company_tmp := profile_tmp.Company
 	if company_tmp.Id != "" && company_tmp.Id_.Valid() {
@@ -35,7 +35,7 @@ func (b *PHAuthCompanyPush) Exec() error {
 }
 
 func (b *PHAuthCompanyPush) Prepare(pr interface{}) error {
-	req := pr.(auth.PHAuth)
+	req := pr.(auth.PhAuth)
 	b.BrickInstance().Pr = req
 	return nil
 }
@@ -57,7 +57,7 @@ func (b *PHAuthCompanyPush) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHAuthCompanyPush) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(auth.PHAuth)
+	tmp := pr.(auth.PhAuth)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -67,7 +67,7 @@ func (b *PHAuthCompanyPush) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval auth.PHAuth = b.BrickInstance().Pr.(auth.PHAuth)
+		var reval auth.PhAuth = b.BrickInstance().Pr.(auth.PhAuth)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }

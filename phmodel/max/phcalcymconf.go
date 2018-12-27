@@ -1,30 +1,30 @@
-package auth
+package max
 
 import (
-	"github.com/Jeorch/max-go/phmodel/profile"
 	"github.com/alfredyang1986/blackmirror/bmmodel"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"
 	"gopkg.in/mgo.v2/bson"
 )
 
-type PhAuth struct {
+type PhCalcYmConf struct {
 	Id  string        `json:"id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
-	Profile profile.PhProfile `json:"Profile" jsonapi:"relationships"`
-
-	Token string `json:"token"`
+	//CompanyId string      `json:"company_id" bson:"company_id"`
+	JarPath   string      `json:"jar_path" bson:"jar_path"`
+	Clazz     string      `json:"clazz" bson:"clazz"`
+	Conf      interface{} `json:"conf"`
 }
 
 /*------------------------------------------------
  * bm object interface
  *------------------------------------------------*/
 
-func (bd *PhAuth) ResetIdWithId_() {
+func (bd *PhCalcYmConf) ResetIdWithId_() {
 	bmmodel.ResetIdWithId_(bd)
 }
 
-func (bd *PhAuth) ResetId_WithID() {
+func (bd *PhCalcYmConf) ResetId_WithID() {
 	bmmodel.ResetId_WithID(bd)
 }
 
@@ -32,38 +32,30 @@ func (bd *PhAuth) ResetId_WithID() {
  * bmobject interface
  *------------------------------------------------*/
 
-func (bd *PhAuth) QueryObjectId() bson.ObjectId {
+func (bd *PhCalcYmConf) QueryObjectId() bson.ObjectId {
 	return bd.Id_
 }
 
-func (bd *PhAuth) QueryId() string {
+func (bd *PhCalcYmConf) QueryId() string {
 	return bd.Id
 }
 
-func (bd *PhAuth) SetObjectId(id_ bson.ObjectId) {
+func (bd *PhCalcYmConf) SetObjectId(id_ bson.ObjectId) {
 	bd.Id_ = id_
 }
 
-func (bd *PhAuth) SetId(id string) {
+func (bd *PhCalcYmConf) SetId(id string) {
 	bd.Id = id
 }
 
 /*------------------------------------------------
  * relationships interface
  *------------------------------------------------*/
-func (bd PhAuth) SetConnect(tag string, v interface{}) interface{} {
-	switch tag {
-	case "Profile":
-		bd.Profile = v.(profile.PhProfile)
-	}
+func (bd PhCalcYmConf) SetConnect(tag string, v interface{}) interface{} {
 	return bd
 }
 
-func (bd PhAuth) QueryConnect(tag string) interface{} {
-	switch tag {
-	case "profile":
-		return bd.Profile
-	}
+func (bd PhCalcYmConf) QueryConnect(tag string) interface{} {
 	return bd
 }
 
@@ -71,14 +63,18 @@ func (bd PhAuth) QueryConnect(tag string) interface{} {
  * mongo interface
  *------------------------------------------------*/
 
-func (bd *PhAuth) InsertBMObject() error {
+func (bd *PhCalcYmConf) InsertBMObject() error {
 	return bmmodel.InsertBMObject(bd)
 }
 
-func (bd *PhAuth) FindOne(req request.Request) error {
+func (bd *PhCalcYmConf) CoverBMObject() error {
+	return bmmodel.CoverOne(bd)
+}
+
+func (bd *PhCalcYmConf) FindOne(req request.Request) error {
 	return bmmodel.FindOne(req, bd)
 }
 
-func (bd *PhAuth) UpdateBMObject(req request.Request) error {
+func (bd *PhCalcYmConf) UpdateBMObject(req request.Request) error {
 	return bmmodel.UpdateOne(req, bd)
 }

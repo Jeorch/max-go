@@ -20,7 +20,7 @@ type PHMaxJobPushBrick struct {
  *------------------------------------------------*/
 
 func (b *PHMaxJobPushBrick) Exec() error {
-	var tmp max.PHMaxJob = b.bk.Pr.(max.PHMaxJob)
+	var tmp max.Phmaxjob = b.bk.Pr.(max.Phmaxjob)
 	var err error
 
 	err = tmp.CheckJobIdCall()
@@ -29,7 +29,7 @@ func (b *PHMaxJobPushBrick) Exec() error {
 }
 
 func (b *PHMaxJobPushBrick) Prepare(pr interface{}) error {
-	req := pr.(max.PHMaxJob)
+	req := pr.(max.Phmaxjob)
 
 	b.BrickInstance().Pr = req
 	return nil
@@ -52,7 +52,7 @@ func (b *PHMaxJobPushBrick) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHMaxJobPushBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	tmp := pr.(max.PHMaxJob)
+	tmp := pr.(max.Phmaxjob)
 	err := jsonapi.ToJsonAPI(&tmp, w)
 	return err
 }
@@ -62,7 +62,7 @@ func (b *PHMaxJobPushBrick) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval max.PHMaxJob = b.BrickInstance().Pr.(max.PHMaxJob)
+		var reval max.Phmaxjob = b.BrickInstance().Pr.(max.Phmaxjob)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }

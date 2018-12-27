@@ -85,7 +85,9 @@ func (bd *ExportMaxResult) Save2Local() {
 	resultPath := bd.ResultPath
 	originPath := resultPath[7:]
 	destName := uuidTmp + "-" + bd.Ym + "-" + bd.Market + ".csv"
-	destPath := "resource/" + destName
+	//TODO:resource 文件配置化
+	destPath := "/go/src/github.com/Jeorch/max-go/resource/" + destName
+	//destPath := "resource/" + destName
 	copyHdfsResultFile2Local(originPath, destPath)
 	bd.ResultPath = destName
 }

@@ -24,7 +24,7 @@ type PHAuthFindProfileBrick struct {
  *------------------------------------------------*/
 
 func (b *PHAuthFindProfileBrick) Exec() error {
-	var tmp profile.PHProfile
+	var tmp profile.PhProfile
 	err := tmp.FindOne(*b.bk.Req)
 	b.bk.Pr = tmp
 	return err
@@ -59,12 +59,12 @@ func (b *PHAuthFindProfileBrick) BrickInstance() *bmpipe.BMBrick {
 
 func (b *PHAuthFindProfileBrick) ResultTo(w io.Writer) error {
 	pr := b.BrickInstance().Pr
-	if reflect.ValueOf(pr).Type().Name() == "PHProfile" {
-		tmp := pr.(profile.PHProfile)
+	if reflect.ValueOf(pr).Type().Name() == "PhProfile" {
+		tmp := pr.(profile.PhProfile)
 		err := jsonapi.ToJsonAPI(&tmp, w)
 		return err
 	} else {
-		tmp := pr.(auth.PHAuth)
+		tmp := pr.(auth.PhAuth)
 		err := jsonapi.ToJsonAPI(&tmp, w)
 		return err
 	}
@@ -75,7 +75,7 @@ func (b *PHAuthFindProfileBrick) Return(w http.ResponseWriter) {
 	if ec != 0 {
 		bmerror.ErrInstance().ErrorReval(ec, w)
 	} else {
-		var reval auth.PHAuth = b.BrickInstance().Pr.(auth.PHAuth)
+		var reval auth.PhAuth = b.BrickInstance().Pr.(auth.PhAuth)
 		jsonapi.ToJsonAPI(&reval, w)
 	}
 }
