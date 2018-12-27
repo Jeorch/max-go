@@ -24,7 +24,7 @@ type Phmaxjob struct {
 	Date               string `json:"date" bson:"date"`
 	Call               string `json:"call" bson:"call"`
 	Panel              string `json:"panel" bson:"panel"`
-	PanelMkt           string `json:"panelMkt" bson:"panelMkt"`
+	PanelMkt           string `json:"panel_mkt" bson:"panel_mkt"`
 	Percentage         int    `json:"percentage" bson:"percentage"`
 	Message            string `json:"message" bson:"message"`
 	Cpa                string `json:"cpa" bson:"cpa"`

@@ -30,7 +30,7 @@ func (b *PHResultCheckForwardBrick) Prepare(pr interface{}) error {
 
 func (b *PHResultCheckForwardBrick) Done(pkg string, idx int64, e error) error {
 	//TODO：forward配置化
-	host := "max-client"
+	host := "192.168.100.174"
 	port := "9000"
 	bmrouter.ForWardNextBrick(host, port, pkg, idx, b)
 	return nil

@@ -10,7 +10,7 @@ type PhCalcYmConf struct {
 	Id  string        `json:"id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
-	CompanyId string      `json:"company_id" bson:"company_id"`
+	//CompanyId string      `json:"company_id" bson:"company_id"`
 	JarPath   string      `json:"jar_path" bson:"jar_path"`
 	Clazz     string      `json:"clazz" bson:"clazz"`
 	Conf      interface{} `json:"conf"`
