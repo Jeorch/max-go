@@ -120,6 +120,7 @@ func main() {
 	/*------------------------------------------------
 	 * sample check bricks object
 	 *------------------------------------------------*/
+	fac.RegisterModel("PhSelecterForMarketBrick", &samplecheckforward.PhSelecterForMarketBrick{})
 	fac.RegisterModel("PHSampleCheckSelecterForwardBrick", &samplecheckforward.PHSampleCheckSelecterForwardBrick{})
 	fac.RegisterModel("PHSampleCheckBodyForwardBrick", &samplecheckforward.PHSampleCheckBodyForwardBrick{})
 

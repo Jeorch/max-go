@@ -27,7 +27,8 @@ type PHMaxJobSendBrick struct {
 
 func (b *PHMaxJobSendBrick) Exec() error {
 	var maxjob max.Phmaxjob = b.bk.Pr.(max.Phmaxjob)
-
+	jsonStr, _ := jsonapi.ToJsonString(&maxjob)
+	println(jsonStr)
 	paction := maxjob2phaction(maxjob)
 	msg, err := jsonapi.ToJsonString(&paction)
 	println(msg)
@@ -82,8 +83,8 @@ func maxjob2phaction(maxjob max.Phmaxjob) max.PhAction {
 		Id:pactionId,
 	}
 	paction.XmppConf.Id = xmppConfId
-	//paction.XmppConf.XmppReport = maxjob.UserID + "@localhost"
-	paction.XmppConf.XmppReport = "lu@localhost"
+	paction.XmppConf.XmppReport = maxjob.UserID + "@localhost"
+	//paction.XmppConf.XmppReport = "lu@localhost"
 
 	paction.UserId = maxjob.UserID
 	paction.CompanyId = maxjob.CompanyID
@@ -156,6 +157,14 @@ func generateCalcYmConf(maxjob max.Phmaxjob) max.PhCalcYmConf {
 	confMap["gycx_file"] = "hdfs:///workData/Client/" + maxjob.Gycx
 	confMap["not_arrival_hosp_file"] = "hdfs:///workData/Client/" + maxjob.NotArrivalHospFile
 	calcYmConf.Conf = confMap
+
+	//TODO： calcYm not found
+	if calcYmConf.Id == "" {
+		println("error calcYm")
+		str, _ := jsonapi.ToJsonString(&maxjob)
+		println(str)
+	}
+
 	return calcYmConf
 
 }
@@ -191,13 +200,17 @@ func generatePanelConf(maxjob max.Phmaxjob) []max.PhPanelConf {
 	}
 
 	for _, v := range reval[:] {
-		tmpName, _ := uuid.GenerateUUID()
-		v.Conf["cpa_file"] = "hdfs:///workData/Client/" + maxjob.Cpa
-		v.Conf["gycx_file"] = "hdfs:///workData/Client/" + maxjob.Gycx
-		v.Conf["not_arrival_hosp_file"] = "hdfs:///workData/Client/" + maxjob.NotArrivalHospFile
-		v.ResetIdWithId_()
-		v.PanelName = tmpName
-		rlst = append(rlst, v)
+		for _, ymTmp := range yms[:] {
+			tmpName, _ := uuid.GenerateUUID()
+			v.Conf["cpa_file"] = "hdfs:///workData/Client/" + maxjob.Cpa
+			v.Conf["gycx_file"] = "hdfs:///workData/Client/" + maxjob.Gycx
+			v.Conf["not_arrival_hosp_file"] = "hdfs:///workData/Client/" + maxjob.NotArrivalHospFile
+			v.PanelName = tmpName
+			v.Ym = ymTmp
+			v.Id = tmpName
+			v.ResetIdWithId_()
+			rlst = append(rlst, v)
+		}
 	}
 
 	return rlst
@@ -256,20 +269,20 @@ func generateCalcConf(maxjob max.Phmaxjob) []max.PhCalcConf {
 		tmpMkt := tmpYmMky[1]
 
 		for _, v := range reval {
-			tmpName1, _ := uuid.GenerateUUID()
-			tmpName2, _ := uuid.GenerateUUID()
-			v.Conf["cpa_file"] = "hdfs:///workData/Client/" + maxjob.Cpa
-			v.Conf["gycx_file"] = "hdfs:///workData/Client/" + maxjob.Gycx
-			v.Conf["not_arrival_hosp_file"] = "hdfs:///workData/Client/" + maxjob.NotArrivalHospFile
-			v.ResetIdWithId_()
-			v.MaxName = tmpName1
-			v.MaxSearchName = tmpName2
-
 			//TODO:从panel结果中读取panelName.
 			//TODO：暂时不以月份来区分
 			if v.Mkt == tmpMkt {
+				tmpName1, _ := uuid.GenerateUUID()
+				tmpName2, _ := uuid.GenerateUUID()
+				v.Conf["cpa_file"] = "hdfs:///workData/Client/" + maxjob.Cpa
+				v.Conf["gycx_file"] = "hdfs:///workData/Client/" + maxjob.Gycx
+				v.Conf["not_arrival_hosp_file"] = "hdfs:///workData/Client/" + maxjob.NotArrivalHospFile
+				v.MaxName = tmpName1
+				v.MaxSearchName = tmpName2
 				v.PanelName = mk
 				v.Ym = tmpYm
+				v.Id = tmpName1
+				v.ResetIdWithId_()
 				rlst = append(rlst, v)
 			}
 		}

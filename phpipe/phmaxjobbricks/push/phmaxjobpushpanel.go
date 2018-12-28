@@ -114,6 +114,8 @@ func push2redis(maxjob max.Phmaxjob) error {
 	client.Expire(maxjob.JobID, 24*time.Hour)
 	client.SAdd(maxjob.JobID+"ym", maxjob.Yms)
 	client.Expire(maxjob.JobID+"ym", 24*time.Hour)
+	client.SAdd(maxjob.JobID+"mkt", maxjob.PanelMkt)
+	client.Expire(maxjob.JobID+"mkt", 24*time.Hour)
 	client.HSet(maxjob.Panel, "ym", maxjob.Yms)
 	client.HSet(maxjob.Panel, "mkt", maxjob.PanelMkt)
 	client.Expire(maxjob.Panel, 24*time.Hour)
