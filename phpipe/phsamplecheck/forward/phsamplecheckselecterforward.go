@@ -94,7 +94,7 @@ func getAllMktForSingleJob(scs samplecheck.SampleCheckSelecter) samplecheck.Samp
 	client := bmredis.GetRedisClient()
 	defer client.Close()
 	mktLst, err := client.SMembers(scs.JobID + "mkt").Result()
-	if err == nil || len(mktLst) != 0 {
+	if err == nil && len(mktLst) != 0 {
 		for _, m := range mktLst {
 			rst = append(rst, m)
 		}
