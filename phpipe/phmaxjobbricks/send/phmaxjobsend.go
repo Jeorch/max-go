@@ -25,6 +25,7 @@ type PHMaxJobSendBrick struct {
 /*------------------------------------------------
  * brick interface
  *------------------------------------------------*/
+var bmXmppConfig bmconfig.BmXmppConfig
 
 func (b *PHMaxJobSendBrick) Exec() error {
 	var maxjob max.Phmaxjob = b.bk.Pr.(max.Phmaxjob)
@@ -33,7 +34,6 @@ func (b *PHMaxJobSendBrick) Exec() error {
 	paction := maxjob2phaction(maxjob)
 	msg, err := jsonapi.ToJsonString(&paction)
 	println(msg)
-	var bmXmppConfig bmconfig.BmXmppConfig
 	bmXmppConfig.GenerateConfig()
 	reportUser := bmXmppConfig.ReportUser + "@" + bmXmppConfig.HostName
 	err = bmxmpp.Forward(reportUser, msg)
@@ -86,7 +86,7 @@ func maxjob2phaction(maxjob max.Phmaxjob) max.PhAction {
 		Id:pactionId,
 	}
 	paction.XmppConf.Id = xmppConfId
-	paction.XmppConf.XmppReport = maxjob.UserID + "@localhost"
+	paction.XmppConf.XmppReport = maxjob.UserID  + "@" + bmXmppConfig.HostName
 
 	paction.UserId = maxjob.UserID
 	paction.CompanyId = maxjob.CompanyID
