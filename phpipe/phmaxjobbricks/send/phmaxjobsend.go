@@ -86,6 +86,7 @@ func maxjob2phaction(maxjob max.Phmaxjob) max.PhAction {
 		Id:pactionId,
 	}
 	paction.XmppConf.Id = xmppConfId
+	bmXmppConfig.GenerateConfig()
 	paction.XmppConf.XmppReport = maxjob.UserID  + "@" + bmXmppConfig.HostName
 
 	paction.UserId = maxjob.UserID
