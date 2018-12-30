@@ -3,6 +3,7 @@ package maxjobsend
 import (
 	"github.com/Jeorch/max-go/phmodel/max"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
+	"github.com/alfredyang1986/blackmirror/bmconfighandle"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmmodel"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"
@@ -32,8 +33,10 @@ func (b *PHMaxJobSendBrick) Exec() error {
 	paction := maxjob2phaction(maxjob)
 	msg, err := jsonapi.ToJsonString(&paction)
 	println(msg)
-	err = bmxmpp.Forward("driver@localhost", msg)
-	//err = bmxmpp.Forward("test@localhost", msg)
+	var bmXmppConfig bmconfig.BmXmppConfig
+	bmXmppConfig.GenerateConfig()
+	reportUser := bmXmppConfig.ReportUser + "@" + bmXmppConfig.HostName
+	err = bmxmpp.Forward(reportUser, msg)
 	return err
 }
 
@@ -84,7 +87,6 @@ func maxjob2phaction(maxjob max.Phmaxjob) max.PhAction {
 	}
 	paction.XmppConf.Id = xmppConfId
 	paction.XmppConf.XmppReport = maxjob.UserID + "@localhost"
-	//paction.XmppConf.XmppReport = "lu@localhost"
 
 	paction.UserId = maxjob.UserID
 	paction.CompanyId = maxjob.CompanyID
@@ -102,11 +104,6 @@ func maxjob2phaction(maxjob max.Phmaxjob) max.PhAction {
 	case "max":
 		paction.CalcConf = generateCalcConf(maxjob)
 	}
-
-	//if paction.CalcYmConf.Id == "" {
-	//	var tmp interface{}
-	//	paction.CalcYmConf = null
-	//}
 
 	return paction
 

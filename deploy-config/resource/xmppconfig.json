@@ -1,0 +1,11 @@
+{
+  "Host":"openfire",
+  "HostName":"max.logic",
+  "Port":"5222",
+  "LoginUser":"jeorch",
+  "LoginUserPwd":"jeorch",
+  "ReportUser":"driver",
+  "ReportUserPwd":"driver",
+  "ListenUser":"driver",
+  "ListenUserPwd":"driver"
+}
