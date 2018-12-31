@@ -2,6 +2,7 @@ package maxjobpush
 
 import (
 	"fmt"
+	"github.com/Jeorch/max-go/phmodel/config"
 	"github.com/Jeorch/max-go/phmodel/max"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmconfighandle"
@@ -95,11 +96,14 @@ func panel2csv(panelFile string) (string, error) {
 }
 
 func push2hdfs(localFile string) (string, error) {
+	var maxHdfs maxconfig.PhHdfsConfig
+	maxHdfs.GenerateConfig()
+	hdfsAddress := maxHdfs.Host + ":" + maxHdfs.Port
+	client, _ := hdfs.New(hdfsAddress)
 	localDir := localFile
 	fileDesName, _ := uuid.GenerateUUID()
 	fmt.Println(fileDesName)
 	fileDesPath := "/workData/Panel/" + fileDesName
-	client, _ := hdfs.New("192.168.100.137:9000")
 	err := client.CopyToRemote(localDir, fileDesPath)
 	os.Remove(localDir)
 	return fileDesName, err
