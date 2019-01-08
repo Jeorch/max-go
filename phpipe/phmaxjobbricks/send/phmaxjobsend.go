@@ -16,6 +16,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type PHMaxJobSendBrick struct {
@@ -123,6 +124,7 @@ func generateCompanyProd(maxjob max.Phmaxjob) string {
 	c := req.SetConnect("conditions", condi)
 	err := companyProd.FindOne(c.(request.Request))
 	if err != nil {
+		println("prodLst is nil")
 		return prodLst
 	}
 
@@ -257,7 +259,6 @@ func generateCalcConf(maxjob max.Phmaxjob) []max.PhCalcConf {
 		tmpym, _ := client.HGet(p, "ym").Result()
 		tmpmkt, _ := client.HGet(p, "mkt").Result()
 		panelmap[p] = tmpym + "#" + tmpmkt
-		//panelmap[p] = tmpmkt
 	}
 
 	for mk, mv := range panelmap {
@@ -275,6 +276,9 @@ func generateCalcConf(maxjob max.Phmaxjob) []max.PhCalcConf {
 				v.Conf["cpa_file"] = "hdfs:///workData/Client/" + maxjob.Cpa
 				v.Conf["gycx_file"] = "hdfs:///workData/Client/" + maxjob.Gycx
 				v.Conf["not_arrival_hosp_file"] = "hdfs:///workData/Client/" + maxjob.NotArrivalHospFile
+
+				//TODO:是否使用Base64编码【comapny+ym+mkt】存储maxName
+				client.Set(maxjob.CompanyID + tmpYm + tmpMkt, tmpName1, 24 * time.Hour)
 				v.MaxName = tmpName1
 				v.MaxSearchName = tmpName2
 				v.PanelName = mk
