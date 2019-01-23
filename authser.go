@@ -60,6 +60,7 @@ func main() {
 	fac.RegisterModel("PhPanelConf", &max.PhPanelConf{})
 	fac.RegisterModel("PhCalcConf", &max.PhCalcConf{})
 	fac.RegisterModel("PhUnitTestConf", &max.PhUnitTestConf{})
+	fac.RegisterModel("PhResultExportConf", &max.PhResultExportConf{})
 	fac.RegisterModel("PhXmppConf", &xmpp.PhXmppConf{})
 
 	fac.RegisterModel("SampleCheckSelecter", &samplecheck.SampleCheckSelecter{})

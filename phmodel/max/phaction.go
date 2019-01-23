@@ -11,18 +11,20 @@ type PhAction struct {
 	Id  string        `json:"id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
-	JobId     string `json:"job_id" bson:"job_id"`
-	UserId    string `json:"user_id" bson:"user_id"`
-	CompanyId string `json:"company_id" bson:"company_id"`
-	PanelPath string `json:"panel_path" bson:"panel_path"`
-	MaxPath   string `json:"max_path" bson:"max_path"`
-	ProdLst   string `json:"prod_lst" bson:"prod_lst"`
+	JobId      string `json:"job_id" bson:"job_id"`
+	UserId     string `json:"user_id" bson:"user_id"`
+	CompanyId  string `json:"company_id" bson:"company_id"`
+	PanelPath  string `json:"panel_path" bson:"panel_path"`
+	MaxPath    string `json:"max_path" bson:"max_path"`
+	ExportPath string `json:"export_path" bson:"export_path"`
+	ProdLst    string `json:"prod_lst" bson:"prod_lst"`
 
-	XmppConf     xmpp.PhXmppConf  `json:"xmppConf" jsonapi:"relationships"`
-	CalcYmConf   PhCalcYmConf     `json:"calcYmConf" jsonapi:"relationships"`
-	PanelConf    []PhPanelConf    `json:"panelConf" jsonapi:"relationships"`
-	CalcConf     []PhCalcConf     `json:"calcConf" jsonapi:"relationships"`
-	UnitTestConf []PhUnitTestConf `json:"unitTestConf" jsonapi:"relationships"`
+	XmppConf         xmpp.PhXmppConf      `json:"xmppConf" jsonapi:"relationships"`
+	CalcYmConf       PhCalcYmConf         `json:"calcYmConf" jsonapi:"relationships"`
+	PanelConf        []PhPanelConf        `json:"panelConf" jsonapi:"relationships"`
+	CalcConf         []PhCalcConf         `json:"calcConf" jsonapi:"relationships"`
+	UnitTestConf     []PhUnitTestConf     `json:"unitTestConf" jsonapi:"relationships"`
+	ResultExportConf []PhResultExportConf `json:"resultExportConf" jsonapi:"relationships"`
 }
 
 /*------------------------------------------------
@@ -93,6 +95,15 @@ func (bd PhAction) SetConnect(tag string, v interface{}) interface{} {
 			}
 		}
 		bd.UnitTestConf = rst
+	case "resultExportConf":
+		var rst []PhResultExportConf
+		for _, item := range v.([]interface{}) {
+			tmp := item.(PhResultExportConf)
+			if len(tmp.Id) > 0 {
+				rst = append(rst, tmp)
+			}
+		}
+		bd.ResultExportConf = rst
 	}
 	return bd
 }

@@ -13,6 +13,7 @@ import (
 	"github.com/alfredyang1986/blackmirror/bmxmpp"
 	"github.com/alfredyang1986/blackmirror/jsonapi"
 	"github.com/hashicorp/go-uuid"
+	"gopkg.in/mgo.v2/bson"
 	"io"
 	"net/http"
 	"strings"
@@ -104,7 +105,10 @@ func maxjob2phaction(maxjob max.Phmaxjob) max.PhAction {
 	case "panel":
 		paction.PanelConf = generatePanelConf(maxjob)
 	case "max":
-		paction.CalcConf = generateCalcConf(maxjob)
+		//paction.CalcConf = generateCalcConf(maxjob)
+		//TODO：之后把导出拆分出max流程
+		paction.ExportPath = "hdfs:///workData/Export/" + maxjob.JobID + "/"
+		paction.CalcConf, paction.ResultExportConf = generateCalcExportConf(maxjob)
 	}
 
 	return paction
@@ -292,4 +296,92 @@ func generateCalcConf(maxjob max.Phmaxjob) []max.PhCalcConf {
 	}
 
 	return rlst
+}
+
+func generateCalcExportConf(maxjob max.Phmaxjob) ([]max.PhCalcConf, []max.PhResultExportConf) {
+	var err error
+	req := request.Request{}
+	req.Res = "PhCalcConf"
+
+	eq := request.Eqcond{}
+	eq.Ky = "company_id"
+	eq.Vy = maxjob.CompanyID
+
+	incond := request.Incond{}
+	incond.Ky = "ym"
+	yms := []string{}
+	yms = strings.Split(maxjob.Yms, "#")
+	incond.Vy = yms
+
+	var condi1 []interface{}
+	var condi2 []interface{}
+	condi1 = append(condi1, eq)
+	condi2 = append(condi2, incond)
+
+	req = req.SetConnect("Eqcond", condi1).(request.Request)
+	//TODO：暂时不以每个月份进行更新匹配表,之后使用版本控制.
+	//req = req.SetConnect("Incond", condi2).(request.Request)
+
+	var reval []max.PhCalcConf
+	var rlst []max.PhCalcConf
+	var exportLst []max.PhResultExportConf
+	err = bmmodel.FindMutil(req, &reval)
+	if err != nil {
+		return []max.PhCalcConf{}, []max.PhResultExportConf{}
+	}
+
+	client := bmredis.GetRedisClient()
+	defer client.Close()
+	panelLst, err := client.SMembers(maxjob.JobID).Result()
+	if err != nil {
+		panic("redis error")
+	}
+	panelmap := make(map[string]string)
+	for _, p := range panelLst {
+		//TODO：暂时不以月份来区分
+		tmpym, _ := client.HGet(p, "ym").Result()
+		tmpmkt, _ := client.HGet(p, "mkt").Result()
+		panelmap[p] = tmpym + "#" + tmpmkt
+	}
+
+	for mk, mv := range panelmap {
+
+		tmpYmMky := strings.Split(mv, "#")
+		tmpYm := tmpYmMky[0]
+		tmpMkt := tmpYmMky[1]
+
+		for _, v := range reval {
+			//TODO:从panel结果中读取panelName.
+			//TODO：暂时不以月份来区分
+			if v.Mkt == tmpMkt {
+				tmpName1, _ := uuid.GenerateUUID()
+				tmpName2, _ := uuid.GenerateUUID()
+				v.Conf["cpa_file"] = "hdfs:///workData/Client/" + maxjob.Cpa
+				v.Conf["gycx_file"] = "hdfs:///workData/Client/" + maxjob.Gycx
+				v.Conf["not_arrival_hosp_file"] = "hdfs:///workData/Client/" + maxjob.NotArrivalHospFile
+
+				//TODO:是否使用Base64编码【comapny+ym+mkt】存储maxName
+				client.Set(maxjob.CompanyID + tmpYm + tmpMkt, tmpName1, 24 * time.Hour)
+				v.MaxName = tmpName1
+				v.MaxSearchName = tmpName2
+				v.PanelName = mk
+				v.Ym = tmpYm
+				v.Id = tmpName1
+				v.ResetIdWithId_()
+				rlst = append(rlst, v)
+
+				exportTmp := max.PhResultExportConf{}
+				exportTmp.Id_ = bson.NewObjectId()
+				exportTmp.Id = exportTmp.Id_.Hex()
+				exportTmp.MaxName = v.MaxName
+				exportTmp.ExportName = maxjob.CompanyID + "-" + v.Ym + "-" + v.Mkt + ".csv"
+				//TODO:临时版本，暂时写死
+				exportTmp.Clazz = "com.pharbers.common.resultexport.phResultExportJob"
+				exportLst = append(exportLst, exportTmp)
+			}
+		}
+
+	}
+
+	return rlst, exportLst
 }
