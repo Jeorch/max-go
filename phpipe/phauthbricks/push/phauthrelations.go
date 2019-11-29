@@ -2,7 +2,7 @@ package authpush
 
 import (
 	"fmt"
-	"github.com/Jeorch/max-go/phmodel/auth"
+	"github.com/PharbersDeveloper/max-go/phmodel/auth"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"

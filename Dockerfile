@@ -6,13 +6,13 @@ RUN git clone https://github.com/jcmturner/gokrb5 /go/src/gopkg.in/jcmturner/gok
 RUN cd /go/src/gopkg.in/jcmturner/gokrb5.v5 && git checkout tags/v5.3.0
 RUN git clone https://github.com/golang/crypto /go/src/golang.org/x/crypto
 
-LABEL max-go.version="0.7" maintainer="Jeorch"
+LABEL max-go.version="0.8" maintainer="Jeorch"
 RUN go get github.com/alfredyang1986/blackmirror
-RUN go get github.com/Jeorch/max-go
+RUN go get github.com/PharbersDeveloper/max-go
 
 ADD deploy-config/ /go/bin/
 
-RUN go install -v github.com/Jeorch/max-go
+RUN go install -v github.com/PharbersDeveloper/max-go
 
 WORKDIR /go/bin
 

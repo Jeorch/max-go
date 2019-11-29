@@ -86,7 +86,7 @@ func (bd *ExportMaxResult) Save2Local() {
 	originPath := resultPath[7:]
 	destName := uuidTmp + "-" + bd.Ym + "-" + bd.Market + ".csv"
 	//TODO:resource 文件配置化
-	destPath := "/go/src/github.com/Jeorch/max-go/resource/" + destName
+	destPath := "/go/src/github.com/PharbersDeveloper/max-go/resource/" + destName
 	//destPath := "resource/" + destName
 	copyHdfsResultFile2Local(originPath, destPath)
 	bd.ResultPath = destName
@@ -94,7 +94,7 @@ func (bd *ExportMaxResult) Save2Local() {
 
 func copyHdfsResultFile2Local(originPath string, destName string) error {
 
-	client, _ := hdfs.New("192.168.100.137:9000")
+	client, _ := hdfs.New("192.168.100.137:8020")
 
 	defer client.Close()
 

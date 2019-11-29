@@ -2,7 +2,7 @@ package max
 
 import (
 	"fmt"
-	"github.com/Jeorch/max-go/phmodel/config"
+	"github.com/PharbersDeveloper/max-go/phmodel/config"
 	"github.com/alfredyang1986/blackmirror/bmconfighandle"
 	"github.com/alfredyang1986/blackmirror/bmexcelhandle"
 	"github.com/alfredyang1986/blackmirror/bmmodel"

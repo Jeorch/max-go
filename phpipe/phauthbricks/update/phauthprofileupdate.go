@@ -1,7 +1,7 @@
 package authupdate
 
 import (
-	"github.com/Jeorch/max-go/phmodel/profile"
+	"github.com/PharbersDeveloper/max-go/phmodel/profile"
 	//"fmt"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmerror"

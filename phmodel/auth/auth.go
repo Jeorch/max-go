@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"github.com/Jeorch/max-go/phmodel/profile"
+	"github.com/PharbersDeveloper/max-go/phmodel/profile"
 	"github.com/alfredyang1986/blackmirror/bmmodel"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"
 	"gopkg.in/mgo.v2/bson"

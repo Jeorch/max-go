@@ -1,8 +1,8 @@
 package samplecheckforward
 
 import (
-	"github.com/Jeorch/max-go/phmodel/max"
-	"github.com/Jeorch/max-go/phmodel/samplecheck"
+	"github.com/PharbersDeveloper/max-go/phmodel/max"
+	"github.com/PharbersDeveloper/max-go/phmodel/samplecheck"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmmodel"

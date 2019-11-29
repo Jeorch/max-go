@@ -1,8 +1,8 @@
 package exportforward
 
 import (
-	"github.com/Jeorch/max-go/phmodel/config"
-	"github.com/Jeorch/max-go/phmodel/export"
+	"github.com/PharbersDeveloper/max-go/phmodel/config"
+	"github.com/PharbersDeveloper/max-go/phmodel/export"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmpipe"
 	"github.com/alfredyang1986/blackmirror/bmrouter"
