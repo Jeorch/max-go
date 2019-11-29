@@ -1,5 +1,5 @@
 {
-  "Host":"192.168.100.174",
+  "Host":"192.168.100.176",
   "Port":"27017",
-  "Database":"test"
+  "Database":"max-go"
 }
