@@ -10,13 +10,14 @@ type PhCalcConf struct {
 	Id  string        `json:"id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
-	Ym            string            `json:"ym" bson:"ym"`
-	Mkt           string            `json:"mkt" bson:"mkt"`
-	PanelName     string            `json:"panel_name" bson:"panel_name"`
-	MaxName       string            `json:"max_name" bson:"max_name"`
-	MaxSearchName string            `json:"max_search_name" bson:"max_search_name"`
-	JarPath       string            `json:"jar_path" bson:"jar_path"`
-	Clazz         string            `json:"clazz" bson:"clazz"`
+	Ym            string                 `json:"ym" bson:"ym"`
+	Mkt           string                 `json:"mkt" bson:"mkt"`
+	CompanyId     string                 `json:"company_id" bson:"company_id"`
+	PanelName     string                 `json:"panel_name" bson:"panel_name"`
+	MaxName       string                 `json:"max_name" bson:"max_name"`
+	MaxSearchName string                 `json:"max_search_name" bson:"max_search_name"`
+	JarPath       string                 `json:"jar_path" bson:"jar_path"`
+	Clazz         string                 `json:"clazz" bson:"clazz"`
 	Conf          map[string]interface{} `json:"conf" bson:"conf"`
 }
 

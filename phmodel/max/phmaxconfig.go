@@ -6,25 +6,22 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-type PhCalcYmConf struct {
+type PhMaxConfig struct {
 	Id  string        `json:"id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
-	CompanyId string      `json:"company_id" bson:"company_id"`
-	JarPath   string      `json:"jar_path" bson:"jar_path"`
-	Clazz     string      `json:"clazz" bson:"clazz"`
-	Conf      interface{} `json:"conf"`
+	ConfigFile string `json:"configFile"`
 }
 
 /*------------------------------------------------
  * bm object interface
  *------------------------------------------------*/
 
-func (bd *PhCalcYmConf) ResetIdWithId_() {
+func (bd *PhMaxConfig) ResetIdWithId_() {
 	bmmodel.ResetIdWithId_(bd)
 }
 
-func (bd *PhCalcYmConf) ResetId_WithID() {
+func (bd *PhMaxConfig) ResetId_WithID() {
 	bmmodel.ResetId_WithID(bd)
 }
 
@@ -32,30 +29,30 @@ func (bd *PhCalcYmConf) ResetId_WithID() {
  * bmobject interface
  *------------------------------------------------*/
 
-func (bd *PhCalcYmConf) QueryObjectId() bson.ObjectId {
+func (bd *PhMaxConfig) QueryObjectId() bson.ObjectId {
 	return bd.Id_
 }
 
-func (bd *PhCalcYmConf) QueryId() string {
+func (bd *PhMaxConfig) QueryId() string {
 	return bd.Id
 }
 
-func (bd *PhCalcYmConf) SetObjectId(id_ bson.ObjectId) {
+func (bd *PhMaxConfig) SetObjectId(id_ bson.ObjectId) {
 	bd.Id_ = id_
 }
 
-func (bd *PhCalcYmConf) SetId(id string) {
+func (bd *PhMaxConfig) SetId(id string) {
 	bd.Id = id
 }
 
 /*------------------------------------------------
  * relationships interface
  *------------------------------------------------*/
-func (bd PhCalcYmConf) SetConnect(tag string, v interface{}) interface{} {
+func (bd PhMaxConfig) SetConnect(tag string, v interface{}) interface{} {
 	return bd
 }
 
-func (bd PhCalcYmConf) QueryConnect(tag string) interface{} {
+func (bd PhMaxConfig) QueryConnect(tag string) interface{} {
 	return bd
 }
 
@@ -63,18 +60,18 @@ func (bd PhCalcYmConf) QueryConnect(tag string) interface{} {
  * mongo interface
  *------------------------------------------------*/
 
-func (bd *PhCalcYmConf) InsertBMObject() error {
+func (bd *PhMaxConfig) InsertBMObject() error {
 	return bmmodel.InsertBMObject(bd)
 }
 
-func (bd *PhCalcYmConf) CoverBMObject() error {
+func (bd *PhMaxConfig) CoverBMObject() error {
 	return bmmodel.CoverOne(bd)
 }
 
-func (bd *PhCalcYmConf) FindOne(req request.Request) error {
+func (bd *PhMaxConfig) FindOne(req request.Request) error {
 	return bmmodel.FindOne(req, bd)
 }
 
-func (bd *PhCalcYmConf) UpdateBMObject(req request.Request) error {
+func (bd *PhMaxConfig) UpdateBMObject(req request.Request) error {
 	return bmmodel.UpdateOne(req, bd)
 }

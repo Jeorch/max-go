@@ -6,25 +6,23 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-type PhCalcYmConf struct {
+type PhUnitTestConf struct {
 	Id  string        `json:"id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
-	CompanyId string      `json:"company_id" bson:"company_id"`
-	JarPath   string      `json:"jar_path" bson:"jar_path"`
-	Clazz     string      `json:"clazz" bson:"clazz"`
-	Conf      interface{} `json:"conf"`
+	Ym            string            `json:"ym" bson:"ym"`
+	Mkt           string            `json:"mkt" bson:"mkt"`
 }
 
 /*------------------------------------------------
  * bm object interface
  *------------------------------------------------*/
 
-func (bd *PhCalcYmConf) ResetIdWithId_() {
+func (bd *PhUnitTestConf) ResetIdWithId_() {
 	bmmodel.ResetIdWithId_(bd)
 }
 
-func (bd *PhCalcYmConf) ResetId_WithID() {
+func (bd *PhUnitTestConf) ResetId_WithID() {
 	bmmodel.ResetId_WithID(bd)
 }
 
@@ -32,30 +30,30 @@ func (bd *PhCalcYmConf) ResetId_WithID() {
  * bmobject interface
  *------------------------------------------------*/
 
-func (bd *PhCalcYmConf) QueryObjectId() bson.ObjectId {
+func (bd *PhUnitTestConf) QueryObjectId() bson.ObjectId {
 	return bd.Id_
 }
 
-func (bd *PhCalcYmConf) QueryId() string {
+func (bd *PhUnitTestConf) QueryId() string {
 	return bd.Id
 }
 
-func (bd *PhCalcYmConf) SetObjectId(id_ bson.ObjectId) {
+func (bd *PhUnitTestConf) SetObjectId(id_ bson.ObjectId) {
 	bd.Id_ = id_
 }
 
-func (bd *PhCalcYmConf) SetId(id string) {
+func (bd *PhUnitTestConf) SetId(id string) {
 	bd.Id = id
 }
 
 /*------------------------------------------------
  * relationships interface
  *------------------------------------------------*/
-func (bd PhCalcYmConf) SetConnect(tag string, v interface{}) interface{} {
+func (bd PhUnitTestConf) SetConnect(tag string, v interface{}) interface{} {
 	return bd
 }
 
-func (bd PhCalcYmConf) QueryConnect(tag string) interface{} {
+func (bd PhUnitTestConf) QueryConnect(tag string) interface{} {
 	return bd
 }
 
@@ -63,18 +61,18 @@ func (bd PhCalcYmConf) QueryConnect(tag string) interface{} {
  * mongo interface
  *------------------------------------------------*/
 
-func (bd *PhCalcYmConf) InsertBMObject() error {
+func (bd *PhUnitTestConf) InsertBMObject() error {
 	return bmmodel.InsertBMObject(bd)
 }
 
-func (bd *PhCalcYmConf) CoverBMObject() error {
+func (bd *PhUnitTestConf) CoverBMObject() error {
 	return bmmodel.CoverOne(bd)
 }
 
-func (bd *PhCalcYmConf) FindOne(req request.Request) error {
+func (bd *PhUnitTestConf) FindOne(req request.Request) error {
 	return bmmodel.FindOne(req, bd)
 }
 
-func (bd *PhCalcYmConf) UpdateBMObject(req request.Request) error {
+func (bd *PhUnitTestConf) UpdateBMObject(req request.Request) error {
 	return bmmodel.UpdateOne(req, bd)
 }

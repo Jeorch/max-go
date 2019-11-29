@@ -2,6 +2,7 @@ package max
 
 import (
 	"fmt"
+	"github.com/Jeorch/max-go/phmodel/config"
 	"github.com/alfredyang1986/blackmirror/bmconfighandle"
 	"github.com/alfredyang1986/blackmirror/bmexcelhandle"
 	"github.com/alfredyang1986/blackmirror/bmmodel"
@@ -193,12 +194,15 @@ func gyc2csv(gycFile string) (string, error) {
 }
 
 func push2hdfs(localFile string) (string, error) {
+	var maxHdfs maxconfig.PhHdfsConfig
+	maxHdfs.GenerateConfig()
+	hdfsAddress := maxHdfs.Host + ":" + maxHdfs.Port
+	client, _ := hdfs.New(hdfsAddress)
 	localDir := localFile
 	fileDesName, _ := uuid.GenerateUUID()
 	fmt.Println(fileDesName)
 	//TODO:hdfs 配置化
 	fileDesPath := "/workData/Client/" + fileDesName
-	client, _ := hdfs.New("192.168.100.137:9000")
 	err := client.CopyToRemote(localDir, fileDesPath)
 	os.Remove(localDir)
 	return fileDesName, err

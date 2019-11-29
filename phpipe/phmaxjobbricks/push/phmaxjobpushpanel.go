@@ -2,6 +2,7 @@ package maxjobpush
 
 import (
 	"fmt"
+	"github.com/Jeorch/max-go/phmodel/config"
 	"github.com/Jeorch/max-go/phmodel/max"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmconfighandle"
@@ -95,11 +96,14 @@ func panel2csv(panelFile string) (string, error) {
 }
 
 func push2hdfs(localFile string) (string, error) {
+	var maxHdfs maxconfig.PhHdfsConfig
+	maxHdfs.GenerateConfig()
+	hdfsAddress := maxHdfs.Host + ":" + maxHdfs.Port
+	client, _ := hdfs.New(hdfsAddress)
 	localDir := localFile
 	fileDesName, _ := uuid.GenerateUUID()
 	fmt.Println(fileDesName)
 	fileDesPath := "/workData/Panel/" + fileDesName
-	client, _ := hdfs.New("192.168.100.137:9000")
 	err := client.CopyToRemote(localDir, fileDesPath)
 	os.Remove(localDir)
 	return fileDesName, err
@@ -114,6 +118,8 @@ func push2redis(maxjob max.Phmaxjob) error {
 	client.Expire(maxjob.JobID, 24*time.Hour)
 	client.SAdd(maxjob.JobID+"ym", maxjob.Yms)
 	client.Expire(maxjob.JobID+"ym", 24*time.Hour)
+	client.SAdd(maxjob.JobID+"mkt", maxjob.PanelMkt)
+	client.Expire(maxjob.JobID+"mkt", 24*time.Hour)
 	client.HSet(maxjob.Panel, "ym", maxjob.Yms)
 	client.HSet(maxjob.Panel, "mkt", maxjob.PanelMkt)
 	client.Expire(maxjob.Panel, 24*time.Hour)

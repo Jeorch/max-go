@@ -10,11 +10,12 @@ type PhPanelConf struct {
 	Id  string        `json:"id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
-	Ym        string            `json:"ym" bson:"ym"`
-	Mkt       string            `json:"mkt" bson:"mkt"`
-	PanelName string            `json:"panel_name" bson:"panel_name"`
-	JarPath   string            `json:"jar_path" bson:"jar_path"`
-	Clazz     string            `json:"clazz" bson:"clazz"`
+	Ym        string                 `json:"ym" bson:"ym"`
+	Mkt       string                 `json:"mkt" bson:"mkt"`
+	CompanyId string                 `json:"company_id" bson:"company_id"`
+	PanelName string                 `json:"panel_name" bson:"panel_name"`
+	JarPath   string                 `json:"jar_path" bson:"jar_path"`
+	Clazz     string                 `json:"clazz" bson:"clazz"`
 	Conf      map[string]interface{} `json:"conf" bson:"conf"`
 }
 

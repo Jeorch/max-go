@@ -6,25 +6,24 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-type PhCalcYmConf struct {
+type PhResultExportConf struct {
 	Id  string        `json:"id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
-	CompanyId string      `json:"company_id" bson:"company_id"`
-	JarPath   string      `json:"jar_path" bson:"jar_path"`
-	Clazz     string      `json:"clazz" bson:"clazz"`
-	Conf      interface{} `json:"conf"`
+	MaxName    string `json:"max_name" bson:"max_name"`
+	ExportName string `json:"export_name" bson:"export_name"`
+	Clazz      string `json:"clazz" bson:"clazz"`
 }
 
 /*------------------------------------------------
  * bm object interface
  *------------------------------------------------*/
 
-func (bd *PhCalcYmConf) ResetIdWithId_() {
+func (bd *PhResultExportConf) ResetIdWithId_() {
 	bmmodel.ResetIdWithId_(bd)
 }
 
-func (bd *PhCalcYmConf) ResetId_WithID() {
+func (bd *PhResultExportConf) ResetId_WithID() {
 	bmmodel.ResetId_WithID(bd)
 }
 
@@ -32,30 +31,30 @@ func (bd *PhCalcYmConf) ResetId_WithID() {
  * bmobject interface
  *------------------------------------------------*/
 
-func (bd *PhCalcYmConf) QueryObjectId() bson.ObjectId {
+func (bd *PhResultExportConf) QueryObjectId() bson.ObjectId {
 	return bd.Id_
 }
 
-func (bd *PhCalcYmConf) QueryId() string {
+func (bd *PhResultExportConf) QueryId() string {
 	return bd.Id
 }
 
-func (bd *PhCalcYmConf) SetObjectId(id_ bson.ObjectId) {
+func (bd *PhResultExportConf) SetObjectId(id_ bson.ObjectId) {
 	bd.Id_ = id_
 }
 
-func (bd *PhCalcYmConf) SetId(id string) {
+func (bd *PhResultExportConf) SetId(id string) {
 	bd.Id = id
 }
 
 /*------------------------------------------------
  * relationships interface
  *------------------------------------------------*/
-func (bd PhCalcYmConf) SetConnect(tag string, v interface{}) interface{} {
+func (bd PhResultExportConf) SetConnect(tag string, v interface{}) interface{} {
 	return bd
 }
 
-func (bd PhCalcYmConf) QueryConnect(tag string) interface{} {
+func (bd PhResultExportConf) QueryConnect(tag string) interface{} {
 	return bd
 }
 
@@ -63,18 +62,18 @@ func (bd PhCalcYmConf) QueryConnect(tag string) interface{} {
  * mongo interface
  *------------------------------------------------*/
 
-func (bd *PhCalcYmConf) InsertBMObject() error {
+func (bd *PhResultExportConf) InsertBMObject() error {
 	return bmmodel.InsertBMObject(bd)
 }
 
-func (bd *PhCalcYmConf) CoverBMObject() error {
+func (bd *PhResultExportConf) CoverBMObject() error {
 	return bmmodel.CoverOne(bd)
 }
 
-func (bd *PhCalcYmConf) FindOne(req request.Request) error {
+func (bd *PhResultExportConf) FindOne(req request.Request) error {
 	return bmmodel.FindOne(req, bd)
 }
 
-func (bd *PhCalcYmConf) UpdateBMObject(req request.Request) error {
+func (bd *PhResultExportConf) UpdateBMObject(req request.Request) error {
 	return bmmodel.UpdateOne(req, bd)
 }

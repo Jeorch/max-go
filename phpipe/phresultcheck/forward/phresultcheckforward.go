@@ -1,6 +1,7 @@
 package resultcheckforward
 
 import (
+	"github.com/Jeorch/max-go/phmodel/config"
 	"github.com/Jeorch/max-go/phmodel/resultcheck"
 	"github.com/alfredyang1986/blackmirror/bmerror"
 	"github.com/alfredyang1986/blackmirror/bmpipe"
@@ -18,6 +19,8 @@ type PHResultCheckForwardBrick struct {
  * brick interface
  *------------------------------------------------*/
 
+var maxForward maxconfig.PhForwardConfig
+
 func (b *PHResultCheckForwardBrick) Exec() error {
 	return nil
 }
@@ -29,9 +32,9 @@ func (b *PHResultCheckForwardBrick) Prepare(pr interface{}) error {
 }
 
 func (b *PHResultCheckForwardBrick) Done(pkg string, idx int64, e error) error {
-	//TODO：forward配置化
-	host := "192.168.100.174"
-	port := "9000"
+	maxForward.GenerateConfig()
+	host := maxForward.HostA
+	port := maxForward.PortA
 	bmrouter.ForWardNextBrick(host, port, pkg, idx, b)
 	return nil
 }

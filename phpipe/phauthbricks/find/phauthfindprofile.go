@@ -1,6 +1,7 @@
 package authfind
 
 import (
+	"errors"
 	"fmt"
 	"github.com/Jeorch/max-go/phmodel/auth"
 	"github.com/Jeorch/max-go/phmodel/profile"
@@ -25,7 +26,23 @@ type PHAuthFindProfileBrick struct {
 
 func (b *PHAuthFindProfileBrick) Exec() error {
 	var tmp profile.PhProfile
-	err := tmp.FindOne(*b.bk.Req)
+	var req request.Request
+	req = *b.bk.Req
+	var eqs []request.Eqcond
+	var pwd string
+	for _, e := range b.bk.Req.Eqcond {
+		if e.Ky == "username" {
+			eqs = append(eqs, e)
+		}
+		if e.Ky == "password" {
+			pwd = e.Vy.(string)
+		}
+	}
+	req.Eqcond = eqs
+	err := tmp.FindOne(req)
+	if err == nil && tmp.Password != pwd {
+		err = errors.New("password error")
+	}
 	b.bk.Pr = tmp
 	return err
 }
@@ -39,8 +56,13 @@ func (b *PHAuthFindProfileBrick) Prepare(pr interface{}) error {
 
 func (b *PHAuthFindProfileBrick) Done(pkg string, idx int64, e error) error {
 
-	if e != nil && e.Error() == "not found" {
-		b.bk.Err = -102
+	if e != nil {
+		switch e.Error() {
+		case "not found":
+			b.bk.Err = -102
+		case "password error":
+			b.bk.Err = -103
+		}
 	}
 
 	tmp, _ := bmpkg.GetPkgLen(pkg)

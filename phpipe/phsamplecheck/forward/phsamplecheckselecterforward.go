@@ -26,7 +26,7 @@ type PHSampleCheckSelecterForwardBrick struct {
 func (b *PHSampleCheckSelecterForwardBrick) Exec() error {
 	tmp := b.BrickInstance().Pr.(samplecheck.SampleCheckSelecter)
 	tmp = getAllYms(tmp)
-	tmp = getAllMkt(tmp)
+	tmp = getAllMktForSingleJob(tmp)
 	//tmp.GetAllYms().GetAllMkt()
 	b.BrickInstance().Pr = tmp
 	return nil
@@ -86,7 +86,22 @@ func getAllYms(scs samplecheck.SampleCheckSelecter) samplecheck.SampleCheckSelec
 
 }
 
-func getAllMkt(scs samplecheck.SampleCheckSelecter) samplecheck.SampleCheckSelecter {
+func getAllMktForSingleJob(scs samplecheck.SampleCheckSelecter) samplecheck.SampleCheckSelecter {
+
+	var err error
+	rst := make([]interface{}, 0)
+
+	client := bmredis.GetRedisClient()
+	defer client.Close()
+	mktLst, err := client.SMembers(scs.JobID + "mkt").Result()
+	if err == nil && len(mktLst) != 0 {
+		for _, m := range mktLst {
+			rst = append(rst, m)
+		}
+		scs.MktList = rst
+		return scs
+	}
+
 	req := request.Request{}
 	req.Res = "PhCalcConf"
 	eq := request.Eqcond{}
@@ -97,11 +112,11 @@ func getAllMkt(scs samplecheck.SampleCheckSelecter) samplecheck.SampleCheckSelec
 	req = req.SetConnect("Eqcond", condi1).(request.Request)
 
 	var reval []max.PhCalcConf
-	err := bmmodel.FindMutil(req, &reval)
+	err = bmmodel.FindMutil(req, &reval)
 	if err != nil {
 		panic("no PhCalcConf found")
 	}
-	rst := make([]interface{}, 0)
+
 	for _, v := range reval {
 		rst = append(rst, v.Mkt)
 	}

@@ -12,8 +12,8 @@ type PhCompany struct {
 	Id  string        `json:"id"`
 	Id_ bson.ObjectId `bson:"_id"`
 
-	CompanyName  string  `json:"companyname" bson:"company_name"`
-	//StartProcess float64 `json:"startprocess" bson:"startprocess"`
+	CompanyName string  `json:"companyname" bson:"company_name"`
+	Process     float64 `json:"process" bson:"process"`
 }
 
 /*------------------------------------------------
