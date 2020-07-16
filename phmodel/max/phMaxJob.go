@@ -2,7 +2,7 @@ package max
 
 import (
 	"fmt"
-	"github.com/Jeorch/max-go/phmodel/config"
+	"github.com/PharbersDeveloper/max-go/phmodel/config"
 	"github.com/alfredyang1986/blackmirror/bmconfighandle"
 	"github.com/alfredyang1986/blackmirror/bmexcelhandle"
 	"github.com/alfredyang1986/blackmirror/bmmodel"
@@ -197,13 +197,20 @@ func push2hdfs(localFile string) (string, error) {
 	var maxHdfs maxconfig.PhHdfsConfig
 	maxHdfs.GenerateConfig()
 	hdfsAddress := maxHdfs.Host + ":" + maxHdfs.Port
-	client, _ := hdfs.New(hdfsAddress)
+	fmt.Println("push2hdfs.hdfsAddress = ", hdfsAddress)
+	client, err := hdfs.New(hdfsAddress)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 	localDir := localFile
 	fileDesName, _ := uuid.GenerateUUID()
-	fmt.Println(fileDesName)
 	//TODO:hdfs 配置化
 	fileDesPath := "/workData/Client/" + fileDesName
-	err := client.CopyToRemote(localDir, fileDesPath)
-	os.Remove(localDir)
+	fmt.Println("push2hdfs.filePath = ", fileDesPath)
+	err = client.CopyToRemote(localDir, fileDesPath)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	_ = os.Remove(localDir)
 	return fileDesName, err
 }

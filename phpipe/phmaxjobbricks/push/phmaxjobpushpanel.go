@@ -2,8 +2,8 @@ package maxjobpush
 
 import (
 	"fmt"
-	"github.com/Jeorch/max-go/phmodel/config"
-	"github.com/Jeorch/max-go/phmodel/max"
+	"github.com/PharbersDeveloper/max-go/phmodel/config"
+	"github.com/PharbersDeveloper/max-go/phmodel/max"
 	"github.com/alfredyang1986/blackmirror/bmcommon/bmsingleton/bmpkg"
 	"github.com/alfredyang1986/blackmirror/bmconfighandle"
 	"github.com/alfredyang1986/blackmirror/bmerror"

@@ -1,7 +1,7 @@
 package profile
 
 import (
-	"github.com/Jeorch/max-go/phmodel/company"
+	"github.com/PharbersDeveloper/max-go/phmodel/company"
 	"github.com/alfredyang1986/blackmirror/bmconfighandle"
 	"github.com/alfredyang1986/blackmirror/bmmodel"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"

@@ -1,7 +1,7 @@
 package samplecheck
 
 import (
-	"github.com/Jeorch/max-go/phmodel/max"
+	"github.com/PharbersDeveloper/max-go/phmodel/max"
 	"github.com/alfredyang1986/blackmirror/bmmodel"
 	"github.com/alfredyang1986/blackmirror/bmmodel/request"
 	"github.com/alfredyang1986/blackmirror/bmredis"

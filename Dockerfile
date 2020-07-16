@@ -1,19 +1,30 @@
-FROM golang:alpine
+# builder 源镜像
+FROM golang:1.12.4-alpine as builder
 
-RUN apk add --no-cache git mercurial
+# 安装git
+RUN apk add --no-cache git
 
-RUN git clone https://github.com/jcmturner/gokrb5 /go/src/gopkg.in/jcmturner/gokrb5.v5
-RUN cd /go/src/gopkg.in/jcmturner/gokrb5.v5 && git checkout tags/v5.3.0
-RUN git clone https://github.com/golang/crypto /go/src/golang.org/x/crypto
+ENV GOPROXY="https://goproxy.cn"
 
-LABEL max-go.version="0.7" maintainer="Jeorch"
-RUN go get github.com/alfredyang1986/blackmirror
-RUN go get github.com/Jeorch/max-go
+WORKDIR /app
 
-ADD deploy-config/ /go/bin/
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
 
-RUN go install -v github.com/Jeorch/max-go
+COPY . .
+RUN go build
 
-WORKDIR /go/bin
+# prod 源镜像
+FROM alpine:latest as prod
 
-ENTRYPOINT ["max-go"]
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /app
+
+COPY --from=0 /app/max-go .
+COPY resource/* ./resource/
+COPY resource-public/* ./resource-public/
+
+EXPOSE 9001
+ENTRYPOINT ["/app/max-go"]
